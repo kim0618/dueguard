@@ -1,0 +1,42 @@
+name: dueguard
+description: "DueGuard - 놓치면 돈 나가는 일정 관리"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.19.0
+
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  path_provider: ^2.1.4
+
+  shared_preferences: ^2.3.3
+  package_info_plus: ^8.1.2
+
+  flutter_local_notifications: ^17.2.4
+  permission_handler: ^11.3.1
+  timezone: ^0.9.4
+  flutter_timezone: ^3.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  build_runner: ^2.4.13
+  isar_generator: ^3.1.0+1
+  riverpod_generator: ^2.4.0
+
+flutter:
+  uses-material-design: true
+  generate: true

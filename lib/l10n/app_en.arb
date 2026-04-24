@@ -1,0 +1,130 @@
+{
+  "@@locale": "en",
+  "appTitle": "DueGuard",
+  "appSubtitle": "Guard the dates that cost you money",
+
+  "home_title": "DueGuard",
+  "item_add_title": "New Item",
+  "item_edit_title": "Edit Item",
+  "item_detail_title": "Item Detail",
+  "settings_title": "Settings",
+
+  "save_button": "Save",
+  "cancel_button": "Cancel",
+  "delete_button": "Delete",
+  "edit_button": "Edit",
+  "done_button": "Done",
+  "add_item_fab": "Add Item",
+
+  "mark_done_button": "Mark as done",
+  "mark_done_confirm_title": "Mark as done?",
+  "mark_done_confirm_body_repeat": "The next occurrence will be scheduled automatically.",
+  "mark_done_confirm_body_once": "This item will be marked as done.",
+
+  "delete_confirm_title": "Delete this item?",
+  "delete_confirm_body": "The notification will also be cancelled. This cannot be undone.",
+  "delete_confirm_cta": "Delete",
+
+  "notification_permission_banner": "Notifications are off. This app relies on notifications.",
+  "notification_permission_allow_button": "Allow",
+  "notification_scheduled_label": "Next alert: {datetime}",
+
+  "home_empty_title": "No items yet",
+  "home_empty_body": "Add card bills, subscriptions, or insurance dates before they slip by.",
+  "home_no_upcoming_title": "Nothing coming up soon",
+  "home_no_upcoming_body": "Nothing scheduled in the next 30 days. All items are shown below.",
+
+  "item_no_notification_title": "Notification could not be scheduled",
+  "item_no_notification_body": "The selected date has passed, or notification permission is missing. Please check the date.",
+
+  "settings_notification_off_title": "Notifications are off",
+  "settings_notification_off_body": "DueGuard relies on notifications. Enable them to receive timely reminders.",
+  "settings_notification_section": "Notifications",
+  "settings_about_section": "About",
+
+  "category_card": "Card",
+  "category_subscription": "Subscription",
+  "category_utility": "Utility",
+  "category_tax": "Tax",
+  "category_insurance": "Insurance",
+  "category_loan": "Loan",
+  "category_other": "Other",
+
+  "repeat_once": "Once",
+  "repeat_daily": "Daily",
+  "repeat_weekly": "Weekly",
+  "repeat_monthly": "Monthly",
+  "repeat_yearly": "Yearly",
+
+  "item_title_label": "Item name",
+  "item_title_hint": "e.g. Credit card bill, Netflix cancellation",
+  "item_date_label": "Date & time",
+  "item_category_label": "Category",
+  "item_repeat_label": "Repeat",
+  "item_note_label": "Note (optional)",
+  "item_note_hint": "Additional notes",
+
+  "error_title_required": "Please enter an item name",
+  "error_date_required": "Please select a date",
+  "error_date_past": "This date has already passed. Select a future date to receive a notification.",
+  "error_save_failed": "Save failed. Please try again.",
+  "error_delete_failed": "Delete failed. Please try again.",
+
+  "toast_item_saved": "Saved",
+  "toast_item_deleted": "Deleted",
+  "toast_item_done": "Marked as done",
+  "toast_next_scheduled": "Next occurrence scheduled",
+  "toast_notification_set": "Notification scheduled",
+  "toast_notification_failed": "Notification scheduling failed. Check permissions.",
+
+  "date_relative_today": "Today",
+  "date_relative_tomorrow": "Tomorrow",
+  "date_relative_day_after_tomorrow": "Day after tomorrow",
+  "date_relative_in_n_days": "{n, plural, =1{In 1 day} other{In {n} days}}",
+  "date_relative_overdue": "{n, plural, =1{1 day overdue} other{{n} days overdue}}",
+
+  "about_app_version": "Version {version}",
+  "about_app_description": "DueGuard reminds you of dates that cost money when missed.",
+  "about_open_source": "Open-source licenses",
+
+  "section_today": "Today",
+  "section_this_week": "This week",
+  "section_upcoming": "Upcoming",
+
+  "completed_count_none": "Not completed yet",
+  "completed_count_n": "{n, plural, =1{Completed 1 time} other{Completed {n} times}}",
+  "last_completed_label": "Last completed",
+  "next_notification_label": "Next notification",
+  "repeat_label": "Repeat",
+  "note_label": "Note",
+  "date_time_label": "Date & time",
+
+  "notification_not_scheduled": "No notification",
+  "notification_permission_required": "Notification permission required",
+
+  "onboarding_a_title": "Keep every money deadline in one place",
+  "onboarding_a_body": "Card bills, subscriptions, insurance renewals - they slip by if you don't track them.",
+  "onboarding_a_cta": "Add your first item",
+
+  "confirm_discard_title": "Leave without saving?",
+  "confirm_discard_body": "Your changes will be lost.",
+  "confirm_discard_cta": "Leave",
+
+  "past_time_once_confirm_title": "This time has already passed",
+  "past_time_once_confirm_body": "A notification will not be scheduled. Save anyway?",
+  "past_time_once_confirm_cta": "Save anyway",
+
+  "badge_overdue": "Overdue",
+  "badge_notification_on": "Alert scheduled",
+  "badge_notification_off": "No alert",
+
+  "notification_body_prefix": "Due",
+
+  "home_permission_banner_title": "Notifications are off",
+  "settings_permission_allowed": "Allowed",
+  "settings_permission_denied": "Off",
+  "settings_notification_open_settings": "Open system settings",
+
+  "form_section_basic": "Basic info",
+  "form_section_schedule": "Schedule"
+}

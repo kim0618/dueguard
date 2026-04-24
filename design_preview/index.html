@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DueGuard Design Preview v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   DESIGN TOKENS (LOCKED)
+   ═══════════════════════════════════════ */
+:root {
+  /* Color */
+  --p:      #2457D6;
+  --pd:     #1E49B6;
+  --ps:     #EAF1FF;
+  --bg:     #F6F7FB;
+  --sf:     #FFFFFF;
+  --bd:     #E6EAF2;
+  --bdl:    #EEF1F7;   /* light divider (within card) */
+  --t1:     #171A21;
+  --t2:     #6B7280;
+  --t3:     #98A2B3;
+  --ok:     #22A06B;
+  --warn:   #F59E0B;
+  --err:    #E5484D;
+  --info:   #4F7DF3;
+  /* Shadow */
+  --sh:     0 8px 24px rgba(15,23,42,.08);
+  --sh-sm:  0 4px 12px rgba(15,23,42,.06);
+  /* Radius */
+  --r-xl:   24px;
+  --r-lg:   20px;
+  --r-md:   16px;
+  --r-btn:  18px;
+  --r-chip: 10px;
+  --r-icon: 14px;
+}
+
+/* ═══════════════════════════════════════
+   BASE
+   ═══════════════════════════════════════ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0B0F17;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 44px 20px 60px;
+  font-family: 'Noto Sans KR', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+}
+
+.preview-ver {
+  color: #2E3D55;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+/* ── Tabs ── */
+.tabs {
+  display: flex;
+  gap: 3px;
+  background: rgba(255,255,255,.05);
+  border-radius: 15px;
+  padding: 4px;
+  margin-bottom: 28px;
+}
+.tab {
+  padding: 9px 22px;
+  border-radius: 11px;
+  border: none;
+  background: transparent;
+  color: #3D5070;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .12s ease;
+  letter-spacing: .1px;
+}
+.tab.active { background: #2457D6; color: #fff; }
+
+/* ═══════════════════════════════════════
+   PHONE FRAME
+   ═══════════════════════════════════════ */
+.phone {
+  width: 390px;
+  height: 844px;
+  background: var(--bg);
+  border: 10px solid #161A22;
+  border-radius: 50px;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 70px 140px rgba(0,0,0,.85),
+    0 0 0 1px rgba(255,255,255,.05),
+    inset 0 1px 0 rgba(255,255,255,.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.island {
+  position: absolute;
+  top: 10px; left: 50%;
+  transform: translateX(-50%);
+  width: 116px; height: 34px;
+  background: #0B0B0B;
+  border-radius: 20px;
+  z-index: 200;
+}
+
+/* Status bar */
+.sbar {
+  height: 48px;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.sbar-time { font-size: 15px; font-weight: 700; color: var(--t1); }
+.sbar-r { display: flex; align-items: center; gap: 5px; }
+.bars { display: flex; align-items: flex-end; gap: 2px; }
+.bar { width: 3px; background: var(--t1); border-radius: 1px; }
+.batt {
+  width: 22px; height: 11px;
+  border: 1.5px solid var(--t1);
+  border-radius: 3px;
+  padding: 1.5px;
+  display: flex; align-items: center;
+  position: relative;
+}
+.batt::after {
+  content: '';
+  position: absolute; right: -4px; top: 50%;
+  transform: translateY(-50%);
+  width: 2px; height: 5px;
+  background: var(--t1); border-radius: 0 1px 1px 0;
+}
+.batt-f { background: var(--t1); border-radius: 1px; height: 100%; width: 72%; }
+.wifi { font-size: 11px; font-weight: 700; color: var(--t1); }
+
+/* ── Screens ── */
+.screen { display: none; flex: 1; flex-direction: column; overflow: hidden; position: relative; }
+.screen.active { display: flex; }
+.scroll {
+  flex: 1;
+  overflow-y: auto; overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.scroll::-webkit-scrollbar { display: none; }
+
+/* App Bars */
+.abar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 20px 10px;
+  background: var(--bg);
+  flex-shrink: 0;
+}
+.abar-home { font-size: 26px; font-weight: 800; color: var(--t1); letter-spacing: -.8px; }
+.abar-title { font-size: 20px; font-weight: 700; color: var(--t1); letter-spacing: -.4px; }
+.abar-icon {
+  width: 36px; height: 36px;
+  border-radius: 12px;
+  background: var(--sf);
+  box-shadow: var(--sh-sm);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--t2); font-size: 16px;
+}
+.abar-back {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--t1); font-size: 24px;
+}
+.abar-txt {
+  font-size: 14px; font-weight: 700; color: var(--p);
+  background: var(--ps); padding: 6px 12px; border-radius: 10px;
+  font-family: inherit;
+}
+
+/* ═══════════════════════════════════════
+   HOME SCREEN
+   ═══════════════════════════════════════ */
+
+/* ── Summary Card ── */
+.summary {
+  margin: 0 20px;
+  background: var(--sf);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh);
+  padding: 18px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.sum-col {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 5px; position: relative; padding: 0 10px;
+}
+.sum-col + .sum-col::before {
+  content: '';
+  position: absolute; left: 0; top: 12%; height: 76%;
+  width: 1px; background: var(--bd);
+}
+.sum-icon {
+  width: 32px; height: 32px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.sum-num {
+  font-size: 30px; font-weight: 800;
+  color: var(--p); line-height: 1;
+  letter-spacing: -1.5px;
+}
+.sum-lbl {
+  font-size: 11px; font-weight: 600;
+  color: var(--t3); letter-spacing: .1px;
+}
+
+/* ── Section Header ── */
+.sec {
+  padding: 14px 20px 6px;
+  display: flex; align-items: center; gap: 7px;
+}
+.sec-t { font-size: 14px; font-weight: 700; color: var(--t1); }
+.sec-n {
+  min-width: 20px; height: 20px;
+  border-radius: 7px; padding: 0 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 800;
+}
+
+/* ── Reminder Card ── */
+.rc {
+  margin: 0 20px 7px;
+  background: var(--sf);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh);
+  display: flex; overflow: hidden; align-items: stretch;
+}
+.rc-bar { width: 4px; flex-shrink: 0; }
+.rc-body {
+  padding: 13px 6px 13px 11px;
+  display: flex; align-items: center; gap: 10px;
+  flex: 1; min-width: 0;
+}
+.cat-ico {
+  width: 42px; height: 42px;
+  border-radius: var(--r-icon);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 19px; flex-shrink: 0;
+}
+.rc-info { flex: 1; min-width: 0; }
+.rc-title {
+  font-size: 15px; font-weight: 700;
+  color: var(--t1); letter-spacing: -.3px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 5px;
+}
+.chips { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 5px; }
+.chip {
+  padding: 2px 7px; border-radius: var(--r-chip);
+  font-size: 10px; font-weight: 700; white-space: nowrap;
+}
+/* chip variants */
+.cn  { background: #F1F3F8; color: #5A6477; }
+.ce  { background: rgba(229,72,77,.11);  color: #D93F44; }
+.cw  { background: rgba(245,158,11,.11); color: #C07D00; }
+.ci  { background: rgba(79,125,243,.11); color: #3D68E0; }
+.cs  { background: rgba(34,160,107,.11); color: #1A8259; }
+
+.rc-date {
+  font-size: 11px; color: var(--t3);
+  display: flex; align-items: center; gap: 3px;
+}
+/* Done circle button */
+.rc-done {
+  width: 44px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.done-ring {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2px solid #D1D7E5;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.done-ring::after {
+  content: '✓';
+  position: absolute;
+  font-size: 12px;
+  font-weight: 700;
+  color: #D1D7E5;
+  line-height: 1;
+}
+
+/* FAB */
+.fab-wrap { position: absolute; bottom: 22px; right: 18px; }
+.fab {
+  background: var(--p); color: #fff; border: none;
+  border-radius: 28px; padding: 13px 18px;
+  font-size: 14px; font-weight: 700;
+  display: flex; align-items: center; gap: 7px;
+  box-shadow: 0 8px 20px rgba(36,87,214,.45), 0 2px 6px rgba(36,87,214,.25);
+  font-family: inherit; cursor: pointer;
+}
+.fab-plus {
+  width: 20px; height: 20px; border-radius: 7px;
+  background: rgba(255,255,255,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; line-height: 1; margin-top: -1px;
+}
+
+/* ═══════════════════════════════════════
+   ADD SCREEN
+   ═══════════════════════════════════════ */
+.fsec { padding: 0 20px; margin-bottom: 12px; }
+.flbl {
+  font-size: 10px; font-weight: 700;
+  color: var(--t3); letter-spacing: 1.2px;
+  text-transform: uppercase; padding: 0 2px; margin-bottom: 7px;
+}
+.fcard {
+  background: var(--sf);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh); padding: 16px 18px;
+}
+/* Title input area */
+.ftitle-wrap {
+  display: flex; flex-direction: column; gap: 3px;
+  padding-bottom: 4px;
+}
+.ftitle-lbl {
+  font-size: 10px; font-weight: 700; color: var(--t3); letter-spacing: .8px;
+}
+.ftitle-val {
+  font-size: 16px; font-weight: 600;
+  color: var(--t3); letter-spacing: -.2px;
+  /* shows placeholder state */
+}
+.ftitle-val.filled { color: var(--t1); }
+
+.fdiv { height: 1px; background: var(--bdl); margin: 13px 0; }
+.fsub {
+  font-size: 10px; font-weight: 700; color: var(--t3);
+  letter-spacing: .8px; margin-bottom: 10px;
+}
+.cat-wrap { display: flex; flex-wrap: wrap; gap: 7px; }
+.cc {
+  padding: 5px 10px;
+  border-radius: var(--r-chip);
+  font-size: 11px; font-weight: 600;
+  border: 1.5px solid transparent;
+  display: flex; align-items: center; gap: 4px;
+  cursor: pointer;
+}
+/* selected category chip */
+.cc-sel {
+  border-color: currentColor !important;
+  filter: brightness(.95) saturate(1.2);
+}
+.cc-sel::before { content: '✓ '; font-size: 10px; }
+
+/* Date/repeat rows */
+.frow { display: flex; align-items: center; gap: 11px; }
+.fico {
+  width: 32px; height: 32px; border-radius: 10px;
+  background: var(--ps);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+}
+.frow-info { flex: 1; }
+.frow-lbl { font-size: 10px; font-weight: 700; color: var(--t3); letter-spacing: .5px; margin-bottom: 2px; }
+.frow-val { font-size: 14px; font-weight: 500; color: var(--t1); }
+.frow-arr { color: var(--t3); font-size: 16px; }
+
+/* Quick chips */
+.qrow { display: flex; gap: 6px; margin: 9px 0 2px; }
+.qc {
+  padding: 5px 13px; border-radius: var(--r-chip);
+  font-size: 12px; font-weight: 600;
+  cursor: pointer; border: none; font-family: inherit;
+  transition: all .1s;
+}
+.qc-def { background: var(--bg); color: var(--t2); border: 1.5px solid var(--bd); }
+.qc-sel {
+  background: var(--ps); color: var(--p);
+  border: 1.5px solid rgba(36,87,214,.35);
+}
+
+/* Note area */
+.fnote {
+  width: 100%; border: none; outline: none;
+  background: transparent; font-family: inherit;
+  font-size: 14px; color: var(--t1);
+  resize: none; min-height: 56px; line-height: 1.6;
+}
+.fnote::placeholder { color: var(--t3); }
+
+/* Save button */
+.save-wrap { padding: 4px 20px 28px; }
+.save-btn {
+  width: 100%; background: var(--p); color: #fff; border: none;
+  border-radius: var(--r-btn); padding: 16px;
+  font-size: 15px; font-weight: 700;
+  font-family: inherit; cursor: pointer;
+  box-shadow: 0 6px 16px rgba(36,87,214,.3);
+}
+
+/* ═══════════════════════════════════════
+   DETAIL SCREEN
+   ═══════════════════════════════════════ */
+.dh {
+  margin: 2px 20px 0;
+  background: var(--sf); border-radius: var(--r-xl);
+  box-shadow: var(--sh); padding: 18px;
+  display: flex; align-items: flex-start; gap: 14px;
+}
+.d-ico {
+  width: 50px; height: 50px; border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.d-info { flex: 1; }
+.d-title {
+  font-size: 17px; font-weight: 700;
+  color: var(--t1); letter-spacing: -.4px; line-height: 1.3;
+  margin-bottom: 8px;
+}
+.d-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+.chl { padding: 3px 9px; border-radius: var(--r-chip); font-size: 11px; font-weight: 700; }
+
+/* Info card */
+.icard {
+  margin: 12px 20px 0;
+  background: var(--sf); border-radius: var(--r-lg);
+  box-shadow: var(--sh); overflow: hidden;
+}
+.irow { display: flex; align-items: center; gap: 11px; padding: 12px 18px; }
+.irow + .irow { border-top: 1px solid var(--bdl); }
+.i-ico {
+  width: 32px; height: 32px; border-radius: 10px;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0; color: var(--t2);
+}
+.i-t { flex: 1; }
+.i-lbl { font-size: 10px; font-weight: 700; color: var(--t3); letter-spacing: .5px; margin-bottom: 3px; }
+.i-val { font-size: 14px; font-weight: 500; color: var(--t1); }
+
+/* Completion highlight row */
+.irow-hi { background: rgba(34,160,107,.04); }
+.irow-hi .i-ico { background: rgba(34,160,107,.10); }
+.irow-hi .i-lbl { color: rgba(34,160,107,.7); }
+.irow-hi .i-val { color: #1A7850; font-weight: 600; }
+
+/* Action buttons */
+.act { padding: 18px 20px 0; display: flex; flex-direction: column; gap: 8px; }
+.btn-p {
+  width: 100%; background: var(--p); color: #fff; border: none;
+  border-radius: var(--r-btn); padding: 15px;
+  font-size: 15px; font-weight: 700;
+  font-family: inherit; cursor: pointer;
+  box-shadow: 0 6px 16px rgba(36,87,214,.25);
+}
+.btn-del {
+  width: 100%; background: transparent; color: var(--err); border: none;
+  border-radius: var(--r-btn); padding: 12px;
+  font-size: 14px; font-weight: 600;
+  font-family: inherit; cursor: pointer;
+  border: 1px solid rgba(229,72,77,.2);
+}
+
+/* ═══════════════════════════════════════
+   SETTINGS SCREEN
+   ═══════════════════════════════════════ */
+.ssec { padding: 0 20px; margin-bottom: 12px; }
+.slbl {
+  font-size: 10px; font-weight: 700; color: var(--t3);
+  letter-spacing: 1.2px; text-transform: uppercase;
+  padding: 0 2px; margin-bottom: 7px;
+}
+.scard {
+  background: var(--sf); border-radius: var(--r-lg);
+  box-shadow: var(--sh); overflow: hidden;
+}
+.srow { display: flex; align-items: center; gap: 11px; padding: 14px 18px; }
+.srow + .srow { border-top: 1px solid var(--bdl); }
+.s-ico {
+  width: 32px; height: 32px; border-radius: 10px;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.s-info { flex: 1; }
+.s-t { font-size: 14px; font-weight: 500; color: var(--t1); }
+.s-s { font-size: 12px; color: var(--t3); margin-top: 1px; }
+.s-arr { color: var(--t3); font-size: 16px; }
+
+.s-desc-card {
+  margin: 0 20px;
+  background: var(--sf); border-radius: var(--r-lg);
+  box-shadow: var(--sh); padding: 16px 18px;
+}
+.s-desc-title {
+  font-size: 13px; font-weight: 700; color: var(--t1);
+  margin-bottom: 6px; letter-spacing: -.1px;
+}
+.s-desc-body {
+  font-size: 13px; color: var(--t2); line-height: 1.65;
+}
+</style>
+</head>
+<body>
+
+<p class="preview-ver">DueGuard · Design Preview v3</p>
+
+<div class="tabs">
+  <button class="tab active" onclick="go('home',this)">홈</button>
+  <button class="tab" onclick="go('add',this)">추가</button>
+  <button class="tab" onclick="go('detail',this)">상세</button>
+  <button class="tab" onclick="go('settings',this)">설정</button>
+</div>
+
+<div class="phone">
+  <div class="island"></div>
+
+  <div class="sbar">
+    <span class="sbar-time">9:41</span>
+    <div class="sbar-r">
+      <div class="bars">
+        <div class="bar" style="height:5px;"></div>
+        <div class="bar" style="height:8px;"></div>
+        <div class="bar" style="height:11px;"></div>
+        <div class="bar" style="height:14px;opacity:.35;"></div>
+      </div>
+      <span class="wifi" style="font-size:10px;">WiFi</span>
+      <div class="batt"><div class="batt-f"></div></div>
+    </div>
+  </div>
+
+  <!-- ══════════ HOME ══════════ -->
+  <div id="s-home" class="screen active">
+    <div class="abar">
+      <span class="abar-home">DueGuard</span>
+      <div class="abar-icon">⚙</div>
+    </div>
+    <div class="scroll">
+
+      <!-- Summary -->
+      <div class="summary">
+        <div class="sum-col">
+          <div class="sum-icon" style="background:rgba(229,72,77,.09);">🔴</div>
+          <div class="sum-num">2</div>
+          <div class="sum-lbl">오늘</div>
+        </div>
+        <div class="sum-col">
+          <div class="sum-icon" style="background:rgba(79,125,243,.09);">📅</div>
+          <div class="sum-num">5</div>
+          <div class="sum-lbl">이번 주</div>
+        </div>
+        <div class="sum-col">
+          <div class="sum-icon" style="background:rgba(36,87,214,.07);">📋</div>
+          <div class="sum-num">12</div>
+          <div class="sum-lbl">전체</div>
+        </div>
+      </div>
+
+      <!-- Today -->
+      <div class="sec">
+        <span class="sec-t">오늘</span>
+        <div class="sec-n" style="background:rgba(229,72,77,.11);color:#D93F44;">2</div>
+      </div>
+
+      <div class="rc">
+        <div class="rc-bar" style="background:#E5484D;"></div>
+        <div class="rc-body">
+          <div class="cat-ico" style="background:#EAF1FF;">💳</div>
+          <div class="rc-info">
+            <div class="rc-title">KB카드 4월 결제</div>
+            <div class="chips">
+              <span class="chip" style="background:#EAF1FF;color:#3563E9;">카드/결제</span>
+              <span class="chip cn">매달</span>
+              <span class="chip ce">오늘</span>
+            </div>
+            <div class="rc-date">🔔 오늘 오전 9:00</div>
+          </div>
+        </div>
+        <div class="rc-done"><div class="done-ring"></div></div>
+      </div>
+
+      <div class="rc">
+        <div class="rc-bar" style="background:#E5484D;"></div>
+        <div class="rc-body">
+          <div class="cat-ico" style="background:#F2EAFE;">📺</div>
+          <div class="rc-info">
+            <div class="rc-title">넷플릭스 구독 갱신</div>
+            <div class="chips">
+              <span class="chip" style="background:#F2EAFE;color:#7C3AED;">구독</span>
+              <span class="chip cn">매달</span>
+              <span class="chip ce">오늘</span>
+            </div>
+            <div class="rc-date">🔔 오늘 오후 2:00</div>
+          </div>
+        </div>
+        <div class="rc-done"><div class="done-ring"></div></div>
+      </div>
+
+      <!-- This Week -->
+      <div class="sec">
+        <span class="sec-t">이번 주</span>
+        <div class="sec-n" style="background:rgba(79,125,243,.1);color:#3D68E0;">3</div>
+      </div>
+
+      <div class="rc">
+        <div class="rc-bar" style="background:#F59E0B;"></div>
+        <div class="rc-body">
+          <div class="cat-ico" style="background:#FFF0F2;">🏦</div>
+          <div class="rc-info">
+            <div class="rc-title">주택담보대출 이자</div>
+            <div class="chips">
+              <span class="chip" style="background:#FFF0F2;color:#D94A68;">대출/이자</span>
+              <span class="chip cn">매달</span>
+              <span class="chip cw">내일</span>
+            </div>
+            <div class="rc-date">🔔 4월 25일 오전 11:00</div>
+          </div>
+        </div>
+        <div class="rc-done"><div class="done-ring"></div></div>
+      </div>
+
+      <div class="rc">
+        <div class="rc-bar" style="background:#4F7DF3;"></div>
+        <div class="rc-body">
+          <div class="cat-ico" style="background:#EAF7F0;">⚡</div>
+          <div class="rc-info">
+            <div class="rc-title">4대보험 납부</div>
+            <div class="chips">
+              <span class="chip" style="background:#EAF7F0;color:#1F8F55;">공과금</span>
+              <span class="chip cn">매달</span>
+              <span class="chip ci">3일 뒤</span>
+            </div>
+            <div class="rc-date">🔔 4월 27일 오전 9:00</div>
+          </div>
+        </div>
+        <div class="rc-done"><div class="done-ring"></div></div>
+      </div>
+
+      <div class="rc">
+        <div class="rc-bar" style="background:#4F7DF3;"></div>
+        <div class="rc-body">
+          <div class="cat-ico" style="background:#EAF4FF;">🛡</div>
+          <div class="rc-info">
+            <div class="rc-title">자동차보험 갱신</div>
+            <div class="chips">
+              <span class="chip" style="background:#EAF4FF;color:#2D6CDF;">보험</span>
+              <span class="chip cn">매년</span>
+              <span class="chip ci">5일 뒤</span>
+            </div>
+            <div class="rc-date">🔔 4월 29일 오전 10:00</div>
+          </div>
+        </div>
+        <div class="rc-done"><div class="done-ring"></div></div>
+      </div>
+
+      <div style="height:120px;"></div>
+    </div>
+    <div class="fab-wrap">
+      <button class="fab">
+        <div class="fab-plus">+</div>항목 추가
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════ ADD ══════════ -->
+  <div id="s-add" class="screen">
+    <div class="abar">
+      <div class="abar-back">‹</div>
+      <span class="abar-title">항목 추가</span>
+      <div style="width:36px;"></div>
+    </div>
+    <div class="scroll">
+      <div style="height:4px;"></div>
+
+      <!-- Section 1 -->
+      <div class="fsec">
+        <div class="flbl">기본 정보</div>
+        <div class="fcard">
+          <div class="ftitle-wrap">
+            <div class="ftitle-lbl">항목 이름</div>
+            <div class="ftitle-val">항목 이름을 입력하세요</div>
+          </div>
+          <div class="fdiv"></div>
+          <div class="fsub">카테고리</div>
+          <div class="cat-wrap">
+            <span class="cc cc-sel" style="background:#EAF1FF;color:#3563E9;">💳 카드/결제</span>
+            <span class="cc" style="background:#F2EAFE;color:#7C3AED;">📺 구독</span>
+            <span class="cc" style="background:#EAF7F0;color:#1F8F55;">⚡ 공과금</span>
+            <span class="cc" style="background:#FFF4E5;color:#C76B00;">📋 세금</span>
+            <span class="cc" style="background:#EAF4FF;color:#2D6CDF;">🛡 보험</span>
+            <span class="cc" style="background:#FFF0F2;color:#D94A68;">🏦 대출/이자</span>
+            <span class="cc" style="background:#F3F5F9;color:#667085;">📌 기타</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2 -->
+      <div class="fsec">
+        <div class="flbl">일정 정보</div>
+        <div class="fcard">
+          <div class="frow">
+            <div class="fico">📅</div>
+            <div class="frow-info">
+              <div class="frow-lbl">날짜 및 시간</div>
+              <div class="frow-val">2026년 4월 30일 오전 9:00</div>
+            </div>
+            <div class="frow-arr">›</div>
+          </div>
+          <div class="qrow">
+            <button class="qc qc-def">오늘</button>
+            <button class="qc qc-sel">내일</button>
+            <button class="qc qc-def">다음 주</button>
+          </div>
+          <div class="fdiv"></div>
+          <div class="frow" style="margin-top:2px;">
+            <div class="fico">🔄</div>
+            <div class="frow-info">
+              <div class="frow-lbl">반복</div>
+              <div class="frow-val">매달 ▾</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3 -->
+      <div class="fsec">
+        <div class="flbl">메모</div>
+        <div class="fcard">
+          <div class="frow" style="align-items:flex-start;gap:11px;">
+            <div class="fico" style="margin-top:2px;">📝</div>
+            <textarea class="fnote" placeholder="추가로 기억할 내용"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="save-wrap">
+        <button class="save-btn">저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ DETAIL ══════════ -->
+  <div id="s-detail" class="screen">
+    <div class="abar">
+      <div class="abar-back">‹</div>
+      <span class="abar-title">상세 정보</span>
+      <div class="abar-txt">수정</div>
+    </div>
+    <div class="scroll">
+
+      <div class="dh">
+        <div class="d-ico" style="background:#EAF1FF;">💳</div>
+        <div class="d-info">
+          <div class="d-title">KB카드 4월 결제</div>
+          <div class="d-chips">
+            <span class="chl" style="background:#EAF1FF;color:#3563E9;">카드/결제</span>
+            <span class="chl ce">오늘</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="icard">
+        <div class="irow">
+          <div class="i-ico">📅</div>
+          <div class="i-t">
+            <div class="i-lbl">날짜 및 시간</div>
+            <div class="i-val">2026년 4월 24일 오전 9:00</div>
+          </div>
+        </div>
+        <div class="irow">
+          <div class="i-ico">🔄</div>
+          <div class="i-t">
+            <div class="i-lbl">반복</div>
+            <div class="i-val">매달</div>
+          </div>
+        </div>
+        <div class="irow">
+          <div class="i-ico">🔔</div>
+          <div class="i-t">
+            <div class="i-lbl">다음 알림</div>
+            <div class="i-val">2026년 4월 24일 오전 9:00</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Completion section — DueGuard differentiator -->
+      <div class="icard">
+        <div class="irow irow-hi">
+          <div class="i-ico">✓</div>
+          <div class="i-t">
+            <div class="i-lbl">완료 횟수</div>
+            <div class="i-val">총 3회 완료</div>
+          </div>
+        </div>
+        <div class="irow irow-hi" style="border-top:1px solid rgba(34,160,107,.12);">
+          <div class="i-ico">📆</div>
+          <div class="i-t">
+            <div class="i-lbl">마지막 완료</div>
+            <div class="i-val">2026년 3월 24일</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Note -->
+      <div class="icard">
+        <div class="irow">
+          <div class="i-ico">📝</div>
+          <div class="i-t">
+            <div class="i-lbl">메모</div>
+            <div class="i-val">자동이체 등록 완료. 잔액 확인 필요.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="act">
+        <button class="btn-p">완료 처리</button>
+        <button class="btn-del">삭제</button>
+      </div>
+      <div style="height:28px;"></div>
+    </div>
+  </div>
+
+  <!-- ══════════ SETTINGS ══════════ -->
+  <div id="s-settings" class="screen">
+    <div class="abar">
+      <div style="width:36px;"></div>
+      <span class="abar-title">설정</span>
+      <div style="width:36px;"></div>
+    </div>
+    <div class="scroll">
+      <div style="height:4px;"></div>
+
+      <div class="ssec">
+        <div class="slbl">알림</div>
+        <div class="scard">
+          <div class="srow">
+            <div class="s-ico" style="background:rgba(34,160,107,.1);color:#22A06B;">🔔</div>
+            <div class="s-info">
+              <div class="s-t">알림</div>
+              <div class="s-s" style="color:#22A06B;font-weight:600;">허용됨</div>
+            </div>
+            <div class="s-arr">›</div>
+          </div>
+          <div class="srow">
+            <div class="s-ico">↗</div>
+            <div class="s-info">
+              <div class="s-t">시스템 설정 열기</div>
+            </div>
+            <div class="s-arr">›</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ssec">
+        <div class="slbl">앱 정보</div>
+        <div class="scard">
+          <div class="srow">
+            <div class="s-ico">📱</div>
+            <div class="s-info"><div class="s-t">버전 1.0.0</div></div>
+          </div>
+          <div class="srow">
+            <div class="s-ico">📄</div>
+            <div class="s-info"><div class="s-t">오픈소스 라이선스</div></div>
+            <div class="s-arr">›</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="s-desc-card">
+        <div class="s-desc-title">DueGuard란?</div>
+        <div class="s-desc-body">
+          놓치면 돈이 나가는 일정만 모아서 관리합니다.<br>
+          카드 결제일 · 구독 갱신 · 보험 납부일을<br>
+          잊기 전에 제때 알려드립니다.
+        </div>
+      </div>
+
+      <div style="height:32px;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function go(name, btn) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('s-' + name).classList.add('active');
+  btn.classList.add('active');
+  const sc = document.querySelector('#s-' + name + ' .scroll');
+  if (sc) sc.scrollTop = 0;
+}
+document.querySelectorAll('.qc').forEach(btn => {
+  btn.addEventListener('click', function () {
+    document.querySelectorAll('.qc').forEach(b => { b.className = 'qc qc-def'; });
+    this.className = 'qc qc-sel';
+  });
+});
+document.querySelectorAll('.cc').forEach(btn => {
+  btn.addEventListener('click', function () {
+    document.querySelectorAll('.cc').forEach(b => b.classList.remove('cc-sel'));
+    this.classList.add('cc-sel');
+  });
+});
+</script>
+</body>
+</html>
