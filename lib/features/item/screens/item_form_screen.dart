@@ -543,18 +543,14 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
       await prefs.setString(_kLastCategoryKey, _category.name);
 
       if (context.mounted) {
+        // Always show positive feedback - item is saved either way.
+        // If notification scheduling failed, the home banner guides user
+        // to fix exact alarm / battery optimization settings.
         final message = outcome.scheduled
             ? l10n.toast_notification_set
-            : outcome.isPastOnce
-                ? l10n.toast_item_saved
-                : l10n.toast_notification_failed;
+            : l10n.toast_item_saved;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(message),
-            backgroundColor: !outcome.scheduled && !outcome.isPastOnce
-                ? AppTheme.error
-                : null,
-          ),
+          SnackBar(content: Text(message)),
         );
         Navigator.pop(context);
       }

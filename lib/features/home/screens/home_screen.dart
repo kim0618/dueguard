@@ -21,7 +21,6 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final itemsAsync = ref.watch(upcomingRemindersProvider);
-    final permissionAsync = ref.watch(notificationPermissionProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -98,19 +97,7 @@ class HomeScreen extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          permissionAsync.maybeWhen(
-            data: (granted) => granted
-                ? const SizedBox.shrink()
-                : _PermissionBanner(
-                    onAllow: () async {
-                      await ref
-                          .read(notificationSchedulerProvider)
-                          .requestPermission();
-                      ref.invalidate(notificationPermissionProvider);
-                    },
-                  ),
-            orElse: () => const SizedBox.shrink(),
-          ),
+          _PermissionsBanners(),
           Expanded(
             child: itemsAsync.when(
               loading: () =>
@@ -488,13 +475,69 @@ class _ShieldLogoPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
+class _PermissionsBanners extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final notif = ref.watch(notificationPermissionProvider);
+    final exact = ref.watch(exactAlarmPermissionProvider);
+    final battery = ref.watch(batteryOptimizationOffProvider);
+
+    final notifGranted = notif.maybeWhen(data: (v) => v, orElse: () => true);
+    final exactGranted = exact.maybeWhen(data: (v) => v, orElse: () => true);
+    final batteryOff = battery.maybeWhen(data: (v) => v, orElse: () => true);
+
+    final scheduler = ref.read(notificationSchedulerProvider);
+
+    final banners = <Widget>[];
+
+    if (!notifGranted) {
+      banners.add(_PermissionBanner(
+        message: '알림이 꺼져 있어요. 이 앱은 알림이 핵심입니다.',
+        cta: '허용',
+        onTap: () async {
+          await scheduler.requestPermission();
+          ref.invalidate(notificationPermissionProvider);
+          ref.invalidate(exactAlarmPermissionProvider);
+        },
+      ));
+    } else if (!exactGranted) {
+      banners.add(_PermissionBanner(
+        message: '정확한 시간에 알림이 오려면 "알람 및 리마인더" 권한이 필요해요.',
+        cta: '설정',
+        onTap: () async {
+          await scheduler.requestExactAlarmPermission();
+          ref.invalidate(exactAlarmPermissionProvider);
+        },
+      ));
+    } else if (!batteryOff) {
+      banners.add(_PermissionBanner(
+        message: '배터리 절약 모드 때문에 알림이 늦거나 안 올 수 있어요.',
+        cta: '해제',
+        onTap: () async {
+          await scheduler.requestIgnoreBatteryOptimization();
+          ref.invalidate(batteryOptimizationOffProvider);
+        },
+      ));
+    }
+
+    if (banners.isEmpty) return const SizedBox.shrink();
+    return Column(children: banners);
+  }
+}
+
 class _PermissionBanner extends StatelessWidget {
-  const _PermissionBanner({required this.onAllow});
-  final VoidCallback onAllow;
+  const _PermissionBanner({
+    required this.message,
+    required this.cta,
+    required this.onTap,
+  });
+
+  final String message;
+  final String cta;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -516,7 +559,7 @@ class _PermissionBanner extends StatelessWidget {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              l10n.notification_permission_banner,
+              message,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: AppTheme.onSurface,
                     height: 1.4,
@@ -525,7 +568,7 @@ class _PermissionBanner extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           TextButton(
-            onPressed: onAllow,
+            onPressed: onTap,
             style: TextButton.styleFrom(
               foregroundColor: AppTheme.warnAccent,
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -536,7 +579,7 @@ class _PermissionBanner extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            child: Text(l10n.notification_permission_allow_button),
+            child: Text(cta),
           ),
         ],
       ),

@@ -9,3 +9,11 @@ final notificationSchedulerProvider = Provider<NotificationScheduler>((ref) {
 final notificationPermissionProvider = FutureProvider<bool>((ref) async {
   return ref.read(notificationSchedulerProvider).hasPermission();
 });
+
+final exactAlarmPermissionProvider = FutureProvider<bool>((ref) async {
+  return ref.read(notificationSchedulerProvider).hasExactAlarmPermission();
+});
+
+final batteryOptimizationOffProvider = FutureProvider<bool>((ref) async {
+  return ref.read(notificationSchedulerProvider).hasBatteryOptimizationOff();
+});

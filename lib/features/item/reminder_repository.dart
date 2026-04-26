@@ -71,15 +71,6 @@ class ReminderRepository {
     });
   }
 
-  Future<void> restore(int id) async {
-    await _isar.writeTxn(() async {
-      final item = await _isar.reminderItems.get(id);
-      if (item == null) return;
-      item.deletedAt = null;
-      await _isar.reminderItems.put(item);
-    });
-  }
-
   Future<int> addCompletionEvent(CompletionEvent event) async {
     return _isar.writeTxn(() => _isar.completionEvents.put(event));
   }

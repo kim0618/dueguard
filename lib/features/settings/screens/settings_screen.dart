@@ -8,6 +8,28 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/providers/locale_provider.dart';
 import '../../../shared/theme/app_theme.dart';
 
+void _showResultDialog(BuildContext context, String title, String result) {
+  final l10n = AppLocalizations.of(context)!;
+  final ok = result == 'ok';
+  showDialog<void>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: Text(title),
+      content: Text(
+        ok
+            ? '✅ 발사 성공\n\n📱 확인 방법:\n1. 화면 상단을 아래로 쓸어내려 알림창 열기\n2. "DueGuard" 알림 있는지 확인\n\n💡 앱이 켜져있어 배너로는 안 떠요.\n   화면을 잠그면 헤드업 알림으로 옵니다.'
+            : '❌ 실패\n\n에러:\n$result\n\n해결 방법:\n1. 알림 권한 허용\n2. 알람 및 리마인더 권한 허용\n3. 배터리 최적화 해제\n4. 삼성: 디바이스 케어 > 절전앱에서 제외',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(ctx),
+          child: Text(l10n.date_picker_confirm),
+        ),
+      ],
+    ),
+  );
+}
+
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -78,6 +100,52 @@ class SettingsScreen extends ConsumerWidget {
                       .read(notificationSchedulerProvider)
                       .openSystemSettings();
                   ref.invalidate(notificationPermissionProvider);
+                },
+              ),
+              _TilesDivider(),
+              _SettingsTile(
+                icon: Icons.notification_important_outlined,
+                iconColor: AppTheme.successAccent,
+                title: '즉시 알림 테스트',
+                subtitle: '알림창에 바로 떠야 정상',
+                trailing: const Icon(
+                  Icons.chevron_right,
+                  color: AppTheme.textSecondary,
+                  size: 18,
+                ),
+                onTap: () async {
+                  final result = await ref
+                      .read(notificationSchedulerProvider)
+                      .testImmediate(
+                        title: 'DueGuard 즉시 테스트',
+                        body: '이 알림이 보이면 알림 시스템 정상',
+                      );
+                  if (context.mounted) {
+                    _showResultDialog(context, '즉시 알림 결과', result);
+                  }
+                },
+              ),
+              _TilesDivider(),
+              _SettingsTile(
+                icon: Icons.alarm,
+                iconColor: AppTheme.warnAccent,
+                title: '15초 뒤 알람 테스트',
+                subtitle: '예약 후 화면 잠그고 기다리세요',
+                trailing: const Icon(
+                  Icons.chevron_right,
+                  color: AppTheme.textSecondary,
+                  size: 18,
+                ),
+                onTap: () async {
+                  final result = await ref
+                      .read(notificationSchedulerProvider)
+                      .testSchedule(
+                        title: 'DueGuard 예약 테스트',
+                        body: '15초 후 알람 발사',
+                      );
+                  if (context.mounted) {
+                    _showResultDialog(context, '예약 알람 결과', result);
+                  }
                 },
               ),
             ],

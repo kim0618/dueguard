@@ -60,6 +60,10 @@ class _DueGuardAppState extends ConsumerState<DueGuardApp>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
+      // Refresh permission providers (user may have changed system settings)
+      ref.invalidate(notificationPermissionProvider);
+      ref.invalidate(exactAlarmPermissionProvider);
+      ref.invalidate(batteryOptimizationOffProvider);
       _catchUp();
     }
   }
