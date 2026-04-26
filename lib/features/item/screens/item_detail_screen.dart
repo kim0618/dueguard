@@ -80,19 +80,24 @@ class ItemDetailScreen extends ConsumerWidget {
           _NoteCard(note: item.note!, l10n: l10n),
         ],
         const SizedBox(height: 28),
-        ElevatedButton(
-          onPressed: () => _confirmDone(context, ref, l10n, item),
-          child: Text(l10n.mark_done_button),
-        ),
-        const SizedBox(height: 12),
-        TextButton(
-          onPressed: () => _confirmDelete(context, ref, l10n, item.id),
-          style: TextButton.styleFrom(
-            foregroundColor: AppTheme.error,
-            minimumSize: const Size.fromHeight(48),
-            textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-          ),
-          child: Text(l10n.delete_button),
+        Row(
+          children: [
+            SizedBox(
+              width: 76,
+              height: 52,
+              child: OutlinedButton(
+                onPressed: () => _confirmDelete(context, ref, l10n, item.id),
+                child: Text(l10n.delete_button),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () => _confirmDone(context, ref, l10n, item),
+                child: Text(l10n.mark_done_button),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -205,17 +210,6 @@ class _DetailHeaderCard extends StatelessWidget {
   final AppLocalizations l10n;
   final int diff;
 
-  Color get _iconBgColor {
-    if (diff <= 0) return AppTheme.todayAccent.withValues(alpha: 0.10);
-    if (diff <= 7) return AppTheme.upcomingAccent.withValues(alpha: 0.10);
-    return AppTheme.primary.withValues(alpha: 0.08);
-  }
-
-  Color get _iconColor {
-    if (diff <= 0) return AppTheme.todayAccent;
-    if (diff <= 7) return AppTheme.upcomingAccent;
-    return AppTheme.primary;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -230,14 +224,14 @@ class _DetailHeaderCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 52,
-            height: 52,
+            width: 48,
+            height: 48,
             decoration: BoxDecoration(
-              color: _iconBgColor,
+              color: categoryBgColor(item.category),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Icon(categoryIcon(item.category),
-                color: _iconColor, size: 26),
+                color: categoryFgColor(item.category), size: 22),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -257,7 +251,7 @@ class _DetailHeaderCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    _CategoryChip(categoryLabel(item.category, l10n)),
+                    _CategoryChip(categoryLabel(item.category, l10n), category: item.category),
                     const SizedBox(width: 6),
                     _UrgencyChip(diff: diff, l10n: l10n),
                   ],
@@ -272,23 +266,25 @@ class _DetailHeaderCard extends StatelessWidget {
 }
 
 class _CategoryChip extends StatelessWidget {
-  const _CategoryChip(this.label);
+  const _CategoryChip(this.label, {required this.category});
   final String label;
+  final Category category;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: AppTheme.surfaceVariant,
+        color: categoryBgColor(category),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
         label,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: AppTheme.textSecondary,
-              fontWeight: FontWeight.w600,
-            ),
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w700,
+          color: categoryFgColor(category),
+        ),
       ),
     );
   }
@@ -315,12 +311,12 @@ class _UrgencyChip extends StatelessWidget {
       fg = AppTheme.todayAccent;
       label = l10n.date_relative_today;
     } else if (diff == 1) {
-      bg = AppTheme.upcomingAccent.withValues(alpha: 0.10);
-      fg = AppTheme.upcomingAccent;
+      bg = AppTheme.warnAccent.withValues(alpha: 0.10);
+      fg = AppTheme.warnAccent;
       label = l10n.date_relative_tomorrow;
     } else if (diff <= 7) {
-      bg = AppTheme.upcomingAccent.withValues(alpha: 0.10);
-      fg = AppTheme.upcomingAccent;
+      bg = AppTheme.warnAccent.withValues(alpha: 0.10);
+      fg = AppTheme.warnAccent;
       label = l10n.date_relative_in_n_days(diff);
     } else {
       bg = AppTheme.surfaceVariant;

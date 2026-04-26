@@ -25,6 +25,12 @@ class ReminderCard extends StatelessWidget {
     return due.difference(today).inDays;
   }
 
+  Color _barColor(int diff) {
+    if (diff <= 0) return AppTheme.todayAccent;
+    if (diff == 1) return AppTheme.warnAccent;
+    return AppTheme.infoAccent;
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -35,58 +41,144 @@ class ReminderCard extends StatelessWidget {
       key: ValueKey(item.id),
       direction: DismissDirection.endToStart,
       background: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
         decoration: BoxDecoration(
           color: AppTheme.error,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20),
         ),
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 24),
-        child: const Icon(Icons.delete_outline, color: Colors.white, size: 22),
+        child: const Icon(Icons.delete_outline, color: Colors.white, size: 20),
       ),
       confirmDismiss: (_) async => _confirmDelete(context, l10n),
       onDismissed: (_) => onDelete(),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-        decoration: BoxDecoration(
-          color: AppTheme.surface,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: AppTheme.cardShadow,
-        ),
-        child: Material(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(16),
-            onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 14, 8, 14),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _CategoryIconBox(category: item.category, diff: diff),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _CardContent(
-                      item: item,
-                      l10n: l10n,
-                      locale: locale,
-                      diff: diff,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          decoration: BoxDecoration(
+            color: AppTheme.surface,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: AppTheme.cardShadow,
+          ),
+          clipBehavior: Clip.hardEdge,
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Left urgency bar
+                Container(
+                  width: 3,
+                  color: _barColor(diff),
+                ),
+                // Category icon
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                  child: Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: categoryBgColor(item.category),
+                      borderRadius: BorderRadius.circular(11),
+                    ),
+                    child: Icon(
+                      categoryIcon(item.category),
+                      color: categoryFgColor(item.category),
+                      size: 16,
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.check_circle_outline,
-                      color: Colors.grey[350],
-                      size: 24,
+                ),
+                // Content
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(9, 10, 4, 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.title,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: AppTheme.onSurface,
+                            letterSpacing: -0.3,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            _CategoryChip(
+                              label: categoryLabel(item.category, l10n),
+                              bg: categoryBgColor(item.category),
+                              fg: categoryFgColor(item.category),
+                            ),
+                            const SizedBox(width: 4),
+                            _UrgencyChip(diff: diff, l10n: l10n),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.notifications_outlined,
+                              size: 11,
+                              color: AppTheme.textTertiary,
+                            ),
+                            const SizedBox(width: 3),
+                            Expanded(
+                              child: Text(
+                                du.formatFullDateTime(item.dueAt, locale),
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppTheme.textSecondary,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    tooltip: l10n.mark_done_button,
-                    onPressed: onDone,
-                    padding: const EdgeInsets.all(8),
-                    constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
                   ),
-                ],
-              ),
+                ),
+                // Done button
+                SizedBox(
+                  width: 40,
+                  child: Center(
+                    child: GestureDetector(
+                      onTap: onDone,
+                      child: Container(
+                        width: 26,
+                        height: 26,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: const Color(0xFFBCC5D8),
+                            width: 2,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.08),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                          color: AppTheme.surface,
+                        ),
+                        child: const Icon(
+                          Icons.check,
+                          size: 12,
+                          color: Color(0xFFBCC5D8),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -108,7 +200,8 @@ class ReminderCard extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () => Navigator.pop(ctx, true),
-                style: TextButton.styleFrom(foregroundColor: AppTheme.error),
+                style:
+                    TextButton.styleFrom(foregroundColor: AppTheme.error),
                 child: Text(l10n.delete_confirm_cta),
               ),
             ],
@@ -118,181 +211,74 @@ class ReminderCard extends StatelessWidget {
   }
 }
 
-class _CategoryIconBox extends StatelessWidget {
-  const _CategoryIconBox({required this.category, required this.diff});
-
-  final Category category;
-  final int diff;
-
-  Color get _bgColor {
-    if (diff <= 0) return AppTheme.todayAccent.withValues(alpha: 0.10);
-    if (diff <= 7) return AppTheme.upcomingAccent.withValues(alpha: 0.10);
-    return AppTheme.primary.withValues(alpha: 0.08);
-  }
-
-  Color get _iconColor {
-    if (diff <= 0) return AppTheme.todayAccent;
-    if (diff <= 7) return AppTheme.upcomingAccent;
-    return AppTheme.primary;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 44,
-      height: 44,
-      decoration: BoxDecoration(
-        color: _bgColor,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Icon(categoryIcon(category), color: _iconColor, size: 22),
-    );
-  }
-}
-
-class _CardContent extends StatelessWidget {
-  const _CardContent({
-    required this.item,
-    required this.l10n,
-    required this.locale,
-    required this.diff,
-  });
-
-  final ReminderItem item;
-  final AppLocalizations l10n;
-  final String locale;
-  final int diff;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                item.title,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: -0.2,
-                    ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 6),
-            _StatusChip(diff: diff, l10n: l10n),
-          ],
-        ),
-        const SizedBox(height: 5),
-        Row(
-          children: [
-            _SmallLabel(categoryLabel(item.category, l10n)),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Text(
-                '·',
-                style: TextStyle(color: Colors.grey[400], fontSize: 10),
-              ),
-            ),
-            _SmallLabel(repeatLabel(item.repeatType, l10n)),
-          ],
-        ),
-        const SizedBox(height: 5),
-        Row(
-          children: [
-            Icon(
-              item.notificationId != null
-                  ? Icons.notifications_outlined
-                  : Icons.notifications_off_outlined,
-              size: 11,
-              color: item.notificationId != null
-                  ? AppTheme.textSecondary
-                  : Colors.grey[350],
-            ),
-            const SizedBox(width: 3),
-            Expanded(
-              child: Text(
-                du.formatFullDateTime(item.dueAt, locale),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppTheme.textSecondary,
-                      fontSize: 11,
-                    ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class _StatusChip extends StatelessWidget {
-  const _StatusChip({required this.diff, required this.l10n});
-
-  final int diff;
-  final AppLocalizations l10n;
-
-  Color get _bgColor {
-    if (diff <= 0) return AppTheme.todayAccent.withValues(alpha: 0.12);
-    if (diff <= 7) return AppTheme.upcomingAccent.withValues(alpha: 0.10);
-    return AppTheme.surfaceVariant;
-  }
-
-  Color get _textColor {
-    if (diff <= 0) return AppTheme.todayAccent;
-    if (diff <= 7) return AppTheme.upcomingAccent;
-    return AppTheme.textSecondary;
-  }
-
-  String _label() {
-    if (diff < 0) return l10n.badge_overdue;
-    if (diff == 0) return l10n.date_relative_today;
-    if (diff == 1) return l10n.date_relative_tomorrow;
-    return l10n.date_relative_in_n_days(diff);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-      decoration: BoxDecoration(
-        color: _bgColor,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        _label(),
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: _textColor,
-              fontWeight: FontWeight.w600,
-              fontSize: 10,
-            ),
-      ),
-    );
-  }
-}
-
-class _SmallLabel extends StatelessWidget {
-  const _SmallLabel(this.label);
+class _CategoryChip extends StatelessWidget {
+  const _CategoryChip({required this.label, required this.bg, required this.fg});
   final String label;
+  final Color bg;
+  final Color fg;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: AppTheme.surfaceVariant,
-        borderRadius: BorderRadius.circular(6),
+        color: bg,
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Text(
         label,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: AppTheme.textSecondary,
-              fontSize: 10,
-            ),
+        style: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+          color: fg,
+        ),
+      ),
+    );
+  }
+}
+
+class _UrgencyChip extends StatelessWidget {
+  const _UrgencyChip({required this.diff, required this.l10n});
+  final int diff;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    final Color bg;
+    final Color fg;
+    final String label;
+
+    if (diff < 0) {
+      bg = AppTheme.todayAccent.withValues(alpha: 0.10);
+      fg = const Color(0xFFCF3B40);
+      label = l10n.badge_overdue;
+    } else if (diff == 0) {
+      bg = AppTheme.todayAccent.withValues(alpha: 0.10);
+      fg = const Color(0xFFCF3B40);
+      label = l10n.date_relative_today;
+    } else if (diff == 1) {
+      bg = AppTheme.warnAccent.withValues(alpha: 0.10);
+      fg = const Color(0xFFB87000);
+      label = l10n.date_relative_tomorrow;
+    } else {
+      bg = AppTheme.infoAccent.withValues(alpha: 0.10);
+      fg = const Color(0xFF3A62D4);
+      label = l10n.date_relative_in_n_days(diff);
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+          color: fg,
+        ),
       ),
     );
   }

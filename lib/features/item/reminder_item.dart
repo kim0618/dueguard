@@ -49,4 +49,7 @@ class ReminderItem {
 
   @Index()
   bool isArchived = false;
+
+  @Index()
+  DateTime? deletedAt;
 }

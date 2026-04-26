@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -155,30 +156,50 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
           ),
           const SizedBox(height: 10),
           Wrap(
-            spacing: 8,
+            spacing: 6,
             runSpacing: 6,
             children: Category.values.map((cat) {
               final selected = _category == cat;
-              return FilterChip(
-                label: Text(
-                  categoryLabel(cat, l10n),
-                  style: TextStyle(
-                    color: selected
-                        ? Colors.white
-                        : AppTheme.textSecondary,
-                    fontSize: 12,
-                    fontWeight:
-                        selected ? FontWeight.w600 : FontWeight.normal,
+              return GestureDetector(
+                onTap: () => setState(() => _category = cat),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 120),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 11, vertical: 7),
+                  decoration: BoxDecoration(
+                    color: categoryBgColor(cat).withValues(
+                        alpha: selected ? 1.0 : 0.5),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: selected
+                          ? categoryFgColor(cat)
+                          : Colors.transparent,
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        categoryIcon(cat),
+                        size: 13,
+                        color: categoryFgColor(cat)
+                            .withValues(alpha: selected ? 1.0 : 0.7),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        categoryLabel(cat, l10n),
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: categoryFgColor(cat)
+                              .withValues(alpha: selected ? 1.0 : 0.75),
+                          letterSpacing: -0.1,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                selected: selected,
-                selectedColor: AppTheme.primary,
-                onSelected: (_) => setState(() => _category = cat),
-                avatar: selected
-                    ? null
-                    : Icon(categoryIcon(cat),
-                        size: 14, color: AppTheme.textSecondary),
-                showCheckmark: false,
               );
             }).toList(),
           ),
@@ -333,24 +354,111 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
   }
 
   Future<void> _pickDateTime(BuildContext context) async {
-    final date = await showDatePicker(
-      context: context,
-      initialDate: _dueAt,
-      firstDate: DateTime.now().subtract(const Duration(days: 365)),
-      lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
-    );
-    if (date == null || !context.mounted) return;
+    DateTime tempDate = _dueAt;
+    final l10n = AppLocalizations.of(context)!;
 
-    final time = await showTimePicker(
+    await showModalBottomSheet<void>(
       context: context,
-      initialTime: TimeOfDay.fromDateTime(_dueAt),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (ctx) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: AppTheme.surface,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: SafeArea(
+            top: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Drag handle
+                Container(
+                  margin: const EdgeInsets.only(top: 10),
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: AppTheme.dividerColor,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                // Top bar
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(ctx),
+                        child: Text(
+                          l10n.cancel_button,
+                          style: const TextStyle(
+                            color: AppTheme.textSecondary,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        l10n.date_picker_title,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.onSurface,
+                          letterSpacing: -0.2,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          setState(() => _dueAt = tempDate);
+                          Navigator.pop(ctx);
+                        },
+                        child: Text(
+                          l10n.date_picker_confirm,
+                          style: const TextStyle(
+                            color: AppTheme.primary,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(
+                    color: AppTheme.dividerLight, height: 1, thickness: 1),
+                // Wheel picker
+                SizedBox(
+                  height: 240,
+                  child: CupertinoTheme(
+                    data: const CupertinoThemeData(
+                      textTheme: CupertinoTextThemeData(
+                        dateTimePickerTextStyle: TextStyle(
+                          fontSize: 18,
+                          color: AppTheme.onSurface,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.dateAndTime,
+                      initialDateTime: _dueAt,
+                      minimumDate:
+                          DateTime.now().subtract(const Duration(days: 365)),
+                      maximumDate:
+                          DateTime.now().add(const Duration(days: 365 * 5)),
+                      use24hFormat: false,
+                      minuteInterval: 1,
+                      onDateTimeChanged: (dt) => tempDate = dt,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
-    if (time == null) return;
-
-    setState(() {
-      _dueAt = DateTime(
-          date.year, date.month, date.day, time.hour, time.minute);
-    });
   }
 
   Future<void> _save(BuildContext context, AppLocalizations l10n) async {

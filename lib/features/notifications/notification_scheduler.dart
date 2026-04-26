@@ -32,7 +32,7 @@ class NotificationScheduler {
       tz.setLocalLocation(tz.getLocation('UTC'));
     }
 
-    const android = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const android = AndroidInitializationSettings('@drawable/ic_notification');
     const settings = InitializationSettings(android: android);
     await _plugin.initialize(settings);
 
@@ -92,13 +92,28 @@ class NotificationScheduler {
         body,
         scheduled,
         details,
-        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
       );
       return true;
     } catch (_) {
-      return false;
+      // Fallback to inexact if exact fails
+      try {
+        await _plugin.zonedSchedule(
+          id,
+          title,
+          body,
+          scheduled,
+          details,
+          androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+        );
+        return true;
+      } catch (_) {
+        return false;
+      }
     }
   }
 

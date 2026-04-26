@@ -341,4 +341,110 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get form_section_schedule => 'Schedule';
+
+  @override
+  String get home_summary_today => 'Today';
+
+  @override
+  String get home_summary_this_week => 'This week';
+
+  @override
+  String get home_summary_total => 'Total';
+
+  @override
+  String get calendar_title => 'Calendar';
+
+  @override
+  String get calendar_no_items_for_day => 'No items for this day';
+
+  @override
+  String get history_title => 'Completion history';
+
+  @override
+  String get history_subtitle => 'View completed items';
+
+  @override
+  String get history_empty => 'No completed items yet';
+
+  @override
+  String history_due_prefix(String date) {
+    return 'Due $date';
+  }
+
+  @override
+  String get trash_title => 'Trash';
+
+  @override
+  String get trash_subtitle => 'Restore deleted items';
+
+  @override
+  String get trash_empty => 'Trash is empty';
+
+  @override
+  String get trash_info_banner => 'Deleted items can be restored';
+
+  @override
+  String get trash_empty_button => 'Empty';
+
+  @override
+  String get trash_restore_tooltip => 'Restore';
+
+  @override
+  String get trash_permanent_delete_tooltip => 'Delete permanently';
+
+  @override
+  String get trash_restore_toast => 'Restored';
+
+  @override
+  String get trash_permanent_delete_title => 'Delete permanently';
+
+  @override
+  String get trash_permanent_delete_body => 'Permanently delete this item?\nThis cannot be undone.';
+
+  @override
+  String get trash_permanent_delete_cta => 'Delete';
+
+  @override
+  String get trash_permanent_delete_toast => 'Item permanently deleted';
+
+  @override
+  String get trash_empty_confirm_title => 'Empty trash';
+
+  @override
+  String get trash_empty_confirm_body => 'Delete all items in trash?\nThis cannot be undone.';
+
+  @override
+  String get trash_empty_confirm_cta => 'Empty';
+
+  @override
+  String get trash_emptied_toast => 'Trash emptied';
+
+  @override
+  String trash_deleted_at(String date) {
+    return 'Deleted $date';
+  }
+
+  @override
+  String get settings_records_section => 'Records';
+
+  @override
+  String get date_picker_title => 'Date and time';
+
+  @override
+  String get date_picker_confirm => 'Confirm';
+
+  @override
+  String get settings_language_section => 'Language';
+
+  @override
+  String get settings_language => 'Language';
+
+  @override
+  String get settings_language_system => 'System default';
+
+  @override
+  String get settings_language_korean => '한국어';
+
+  @override
+  String get settings_language_english => 'English';
 }

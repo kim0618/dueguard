@@ -43,44 +43,49 @@ const ReminderItemSchema = CollectionSchema(
       name: r'createdAt',
       type: IsarType.dateTime,
     ),
-    r'dueAt': PropertySchema(
+    r'deletedAt': PropertySchema(
       id: 5,
+      name: r'deletedAt',
+      type: IsarType.dateTime,
+    ),
+    r'dueAt': PropertySchema(
+      id: 6,
       name: r'dueAt',
       type: IsarType.dateTime,
     ),
     r'isArchived': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'isArchived',
       type: IsarType.bool,
     ),
     r'lastCompletedAt': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'lastCompletedAt',
       type: IsarType.dateTime,
     ),
     r'note': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'note',
       type: IsarType.string,
     ),
     r'notificationId': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'notificationId',
       type: IsarType.long,
     ),
     r'repeatType': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'repeatType',
       type: IsarType.string,
       enumMap: _ReminderItemrepeatTypeEnumValueMap,
     ),
     r'title': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'title',
       type: IsarType.string,
     ),
     r'updatedAt': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'updatedAt',
       type: IsarType.dateTime,
     )
@@ -112,6 +117,19 @@ const ReminderItemSchema = CollectionSchema(
       properties: [
         IndexPropertySchema(
           name: r'isArchived',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'deletedAt': IndexSchema(
+      id: -8969437169173379604,
+      name: r'deletedAt',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'deletedAt',
           type: IndexType.value,
           caseSensitive: false,
         )
@@ -155,14 +173,15 @@ void _reminderItemSerialize(
   writer.writeString(offsets[2], object.category.name);
   writer.writeLong(offsets[3], object.completedCount);
   writer.writeDateTime(offsets[4], object.createdAt);
-  writer.writeDateTime(offsets[5], object.dueAt);
-  writer.writeBool(offsets[6], object.isArchived);
-  writer.writeDateTime(offsets[7], object.lastCompletedAt);
-  writer.writeString(offsets[8], object.note);
-  writer.writeLong(offsets[9], object.notificationId);
-  writer.writeString(offsets[10], object.repeatType.name);
-  writer.writeString(offsets[11], object.title);
-  writer.writeDateTime(offsets[12], object.updatedAt);
+  writer.writeDateTime(offsets[5], object.deletedAt);
+  writer.writeDateTime(offsets[6], object.dueAt);
+  writer.writeBool(offsets[7], object.isArchived);
+  writer.writeDateTime(offsets[8], object.lastCompletedAt);
+  writer.writeString(offsets[9], object.note);
+  writer.writeLong(offsets[10], object.notificationId);
+  writer.writeString(offsets[11], object.repeatType.name);
+  writer.writeString(offsets[12], object.title);
+  writer.writeDateTime(offsets[13], object.updatedAt);
 }
 
 ReminderItem _reminderItemDeserialize(
@@ -179,17 +198,18 @@ ReminderItem _reminderItemDeserialize(
           Category.card;
   object.completedCount = reader.readLong(offsets[3]);
   object.createdAt = reader.readDateTime(offsets[4]);
-  object.dueAt = reader.readDateTime(offsets[5]);
+  object.deletedAt = reader.readDateTimeOrNull(offsets[5]);
+  object.dueAt = reader.readDateTime(offsets[6]);
   object.id = id;
-  object.isArchived = reader.readBool(offsets[6]);
-  object.lastCompletedAt = reader.readDateTimeOrNull(offsets[7]);
-  object.note = reader.readStringOrNull(offsets[8]);
-  object.notificationId = reader.readLongOrNull(offsets[9]);
+  object.isArchived = reader.readBool(offsets[7]);
+  object.lastCompletedAt = reader.readDateTimeOrNull(offsets[8]);
+  object.note = reader.readStringOrNull(offsets[9]);
+  object.notificationId = reader.readLongOrNull(offsets[10]);
   object.repeatType = _ReminderItemrepeatTypeValueEnumMap[
-          reader.readStringOrNull(offsets[10])] ??
+          reader.readStringOrNull(offsets[11])] ??
       RepeatType.once;
-  object.title = reader.readString(offsets[11]);
-  object.updatedAt = reader.readDateTime(offsets[12]);
+  object.title = reader.readString(offsets[12]);
+  object.updatedAt = reader.readDateTime(offsets[13]);
   return object;
 }
 
@@ -213,22 +233,24 @@ P _reminderItemDeserializeProp<P>(
     case 4:
       return (reader.readDateTime(offset)) as P;
     case 5:
-      return (reader.readDateTime(offset)) as P;
-    case 6:
-      return (reader.readBool(offset)) as P;
-    case 7:
       return (reader.readDateTimeOrNull(offset)) as P;
+    case 6:
+      return (reader.readDateTime(offset)) as P;
+    case 7:
+      return (reader.readBool(offset)) as P;
     case 8:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 9:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 10:
+      return (reader.readLongOrNull(offset)) as P;
+    case 11:
       return (_ReminderItemrepeatTypeValueEnumMap[
               reader.readStringOrNull(offset)] ??
           RepeatType.once) as P;
-    case 11:
-      return (reader.readString(offset)) as P;
     case 12:
+      return (reader.readString(offset)) as P;
+    case 13:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -301,6 +323,14 @@ extension ReminderItemQueryWhereSort
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'isArchived'),
+      );
+    });
+  }
+
+  QueryBuilder<ReminderItem, ReminderItem, QAfterWhere> anyDeletedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'deletedAt'),
       );
     });
   }
@@ -507,6 +537,119 @@ extension ReminderItemQueryWhere
               includeUpper: false,
             ));
       }
+    });
+  }
+
+  QueryBuilder<ReminderItem, ReminderItem, QAfterWhereClause>
+      deletedAtIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'deletedAt',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<ReminderItem, ReminderItem, QAfterWhereClause>
+      deletedAtIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'deletedAt',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<ReminderItem, ReminderItem, QAfterWhereClause> deletedAtEqualTo(
+      DateTime? deletedAt) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'deletedAt',
+        value: [deletedAt],
+      ));
+    });
+  }
+
+  QueryBuilder<ReminderItem, ReminderItem, QAfterWhereClause>
+      deletedAtNotEqualTo(DateTime? deletedAt) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'deletedAt',
+              lower: [],
+              upper: [deletedAt],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'deletedAt',
+              lower: [deletedAt],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'deletedAt',
+              lower: [deletedAt],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'deletedAt',
+              lower: [],
+              upper: [deletedAt],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<ReminderItem, ReminderItem, QAfterWhereClause>
+      deletedAtGreaterThan(
+    DateTime? deletedAt, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'deletedAt',
+        lower: [deletedAt],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<ReminderItem, ReminderItem, QAfterWhereClause> deletedAtLessThan(
+    DateTime? deletedAt, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'deletedAt',
+        lower: [],
+        upper: [deletedAt],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<ReminderItem, ReminderItem, QAfterWhereClause> deletedAtBetween(
+    DateTime? lowerDeletedAt,
+    DateTime? upperDeletedAt, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'deletedAt',
+        lower: [lowerDeletedAt],
+        includeLower: includeLower,
+        upper: [upperDeletedAt],
+        includeUpper: includeUpper,
+      ));
     });
   }
 }
@@ -901,6 +1044,80 @@ extension ReminderItemQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'createdAt',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<ReminderItem, ReminderItem, QAfterFilterCondition>
+      deletedAtIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'deletedAt',
+      ));
+    });
+  }
+
+  QueryBuilder<ReminderItem, ReminderItem, QAfterFilterCondition>
+      deletedAtIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'deletedAt',
+      ));
+    });
+  }
+
+  QueryBuilder<ReminderItem, ReminderItem, QAfterFilterCondition>
+      deletedAtEqualTo(DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'deletedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ReminderItem, ReminderItem, QAfterFilterCondition>
+      deletedAtGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'deletedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ReminderItem, ReminderItem, QAfterFilterCondition>
+      deletedAtLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'deletedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ReminderItem, ReminderItem, QAfterFilterCondition>
+      deletedAtBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'deletedAt',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1723,6 +1940,18 @@ extension ReminderItemQuerySortBy
     });
   }
 
+  QueryBuilder<ReminderItem, ReminderItem, QAfterSortBy> sortByDeletedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deletedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ReminderItem, ReminderItem, QAfterSortBy> sortByDeletedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deletedAt', Sort.desc);
+    });
+  }
+
   QueryBuilder<ReminderItem, ReminderItem, QAfterSortBy> sortByDueAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dueAt', Sort.asc);
@@ -1891,6 +2120,18 @@ extension ReminderItemQuerySortThenBy
     });
   }
 
+  QueryBuilder<ReminderItem, ReminderItem, QAfterSortBy> thenByDeletedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deletedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ReminderItem, ReminderItem, QAfterSortBy> thenByDeletedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deletedAt', Sort.desc);
+    });
+  }
+
   QueryBuilder<ReminderItem, ReminderItem, QAfterSortBy> thenByDueAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dueAt', Sort.asc);
@@ -2040,6 +2281,12 @@ extension ReminderItemQueryWhereDistinct
     });
   }
 
+  QueryBuilder<ReminderItem, ReminderItem, QDistinct> distinctByDeletedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'deletedAt');
+    });
+  }
+
   QueryBuilder<ReminderItem, ReminderItem, QDistinct> distinctByDueAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'dueAt');
@@ -2129,6 +2376,12 @@ extension ReminderItemQueryProperty
   QueryBuilder<ReminderItem, DateTime, QQueryOperations> createdAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'createdAt');
+    });
+  }
+
+  QueryBuilder<ReminderItem, DateTime?, QQueryOperations> deletedAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'deletedAt');
     });
   }
 

@@ -11,6 +11,7 @@ import 'features/item/reminder_repository.dart';
 import 'features/notifications/notification_providers.dart';
 import 'features/notifications/notification_scheduler.dart';
 import 'l10n/generated/app_localizations.dart';
+import 'shared/providers/locale_provider.dart';
 import 'shared/theme/app_theme.dart';
 import 'shared/utils/date_utils.dart' as du;
 
@@ -70,7 +71,9 @@ class _DueGuardAppState extends ConsumerState<DueGuardApp>
     catchUpAction(
       ref: ref,
       copyFor: (item) => _notificationCopy(item, resolved),
-    );
+    ).catchError((_) {
+      // Best-effort sync; ignore failures so app still launches
+    });
   }
 
   NotificationCopy _notificationCopy(ReminderItem item, String locale) {
@@ -82,10 +85,12 @@ class _DueGuardAppState extends ConsumerState<DueGuardApp>
 
   @override
   Widget build(BuildContext context) {
+    final locale = ref.watch(localeProvider);
     return MaterialApp(
       title: 'DueGuard',
       theme: AppTheme.light,
       themeMode: ThemeMode.light,
+      locale: locale,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

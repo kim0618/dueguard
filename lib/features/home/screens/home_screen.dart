@@ -10,6 +10,7 @@ import '../../../shared/utils/date_utils.dart' as du;
 import '../../../shared/widgets/empty_state.dart';
 import '../../../shared/widgets/reminder_card.dart';
 import '../../item/screens/item_detail_screen.dart';
+import '../../calendar/screens/calendar_screen.dart';
 import '../../item/screens/item_form_screen.dart';
 import '../../settings/screens/settings_screen.dart';
 
@@ -24,18 +25,74 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.home_title),
+        titleSpacing: 20,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomPaint(
+              size: const Size(24, 26),
+              painter: _ShieldLogoPainter(),
+            ),
+            const SizedBox(width: 7),
+            Text(
+              l10n.home_title,
+              style: const TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.w800,
+                letterSpacing: -0.5,
+              ),
+            ),
+          ],
+        ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            tooltip: l10n.settings_title,
-            onPressed: () async {
-              await Navigator.push(
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: GestureDetector(
+              onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const SettingsScreen()),
-              );
-              ref.invalidate(notificationPermissionProvider);
-            },
+                MaterialPageRoute(builder: (_) => const CalendarScreen()),
+              ),
+              child: Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: AppTheme.surface,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: AppTheme.cardShadowSm,
+                ),
+                child: const Icon(
+                  Icons.calendar_month_outlined,
+                  size: 16,
+                  color: AppTheme.textSecondary,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: GestureDetector(
+              onTap: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                );
+                ref.invalidate(notificationPermissionProvider);
+              },
+              child: Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: AppTheme.surface,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: AppTheme.cardShadowSm,
+                ),
+                child: const Icon(
+                  Icons.settings_outlined,
+                  size: 16,
+                  color: AppTheme.textSecondary,
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -106,6 +163,12 @@ class HomeScreen extends ConsumerWidget {
     return ListView(
       padding: const EdgeInsets.only(top: 8, bottom: 100),
       children: [
+        _SummaryCard(
+          todayCount: todayItems.length,
+          weekCount: thisWeekItems.length,
+          totalCount: items.length,
+          l10n: l10n,
+        ),
         if (todayItems.isNotEmpty) ...[
           _SectionHeader(
             label: l10n.section_today,
@@ -252,41 +315,177 @@ class _SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 6),
+      padding: const EdgeInsets.fromLTRB(20, 10, 20, 4),
       child: Row(
         children: [
           Text(
             label,
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: urgency ? AppTheme.todayAccent : AppTheme.textSecondary,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.2,
-                ),
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: AppTheme.textSecondary,
+              letterSpacing: 0.1,
+            ),
           ),
-          const SizedBox(width: 6),
+          const SizedBox(width: 5),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
             decoration: BoxDecoration(
               color: urgency
                   ? AppTheme.todayAccent.withValues(alpha: 0.10)
-                  : AppTheme.surfaceVariant,
-              borderRadius: BorderRadius.circular(10),
+                  : AppTheme.infoAccent.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
               '$count',
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: urgency
-                        ? AppTheme.todayAccent
-                        : AppTheme.textSecondary,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 10,
-                  ),
+              style: TextStyle(
+                fontSize: 9,
+                fontWeight: FontWeight.w800,
+                color: urgency ? AppTheme.todayAccent : AppTheme.infoAccent,
+              ),
             ),
           ),
         ],
       ),
     );
   }
+}
+
+class _SummaryCard extends StatelessWidget {
+  const _SummaryCard({
+    required this.todayCount,
+    required this.weekCount,
+    required this.totalCount,
+    required this.l10n,
+  });
+
+  final int todayCount;
+  final int weekCount;
+  final int totalCount;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 4, 20, 0),
+      decoration: BoxDecoration(
+        color: AppTheme.surface,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: AppTheme.cardShadow,
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            _SummaryCell(
+                count: todayCount,
+                label: l10n.home_summary_today,
+                isToday: true),
+            VerticalDivider(
+                width: 1, thickness: 1, color: AppTheme.dividerLight),
+            _SummaryCell(
+                count: weekCount, label: l10n.home_summary_this_week),
+            VerticalDivider(
+                width: 1, thickness: 1, color: AppTheme.dividerLight),
+            _SummaryCell(
+                count: totalCount, label: l10n.home_summary_total),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SummaryCell extends StatelessWidget {
+  const _SummaryCell({
+    required this.count,
+    required this.label,
+    this.isToday = false,
+  });
+
+  final int count;
+  final String label;
+  final bool isToday;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (isToday) ...[
+            Container(
+              width: 8,
+              height: 8,
+              decoration: const BoxDecoration(
+                color: AppTheme.todayAccent,
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(height: 2),
+          ] else
+            const SizedBox(height: 10),
+          Text(
+            '$count',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -1.2,
+              color: isToday ? AppTheme.todayAccent : AppTheme.primary,
+            ),
+          ),
+          const SizedBox(height: 1),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: AppTheme.textTertiary,
+              letterSpacing: 0.2,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ShieldLogoPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = AppTheme.primary
+      ..style = PaintingStyle.fill;
+
+    final path = Path();
+    path.moveTo(size.width / 2, 0);
+    path.quadraticBezierTo(0, 0, 0, size.height * 0.22);
+    path.lineTo(0, size.height * 0.48);
+    path.cubicTo(0, size.height * 0.72, size.width * 0.15, size.height * 0.91,
+        size.width / 2, size.height);
+    path.cubicTo(size.width * 0.85, size.height * 0.91, size.width,
+        size.height * 0.72, size.width, size.height * 0.48);
+    path.lineTo(size.width, size.height * 0.22);
+    path.quadraticBezierTo(size.width, 0, size.width / 2, 0);
+    path.close();
+    canvas.drawPath(path, paint);
+
+    final checkPaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = size.width * 0.13
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    final checkPath = Path();
+    checkPath.moveTo(size.width * 0.27, size.height * 0.50);
+    checkPath.lineTo(size.width * 0.44, size.height * 0.64);
+    checkPath.lineTo(size.width * 0.73, size.height * 0.37);
+    canvas.drawPath(checkPath, checkPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _PermissionBanner extends StatelessWidget {
@@ -300,10 +499,10 @@ class _PermissionBanner extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: AppTheme.upcomingAccent.withValues(alpha: 0.10),
+        color: AppTheme.warnAccent.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: AppTheme.upcomingAccent.withValues(alpha: 0.25),
+          color: AppTheme.warnAccent.withValues(alpha: 0.25),
           width: 1,
         ),
       ),
@@ -311,7 +510,7 @@ class _PermissionBanner extends StatelessWidget {
         children: [
           Icon(
             Icons.notifications_off_outlined,
-            color: AppTheme.upcomingAccent,
+            color: AppTheme.warnAccent,
             size: 20,
           ),
           const SizedBox(width: 10),
@@ -328,7 +527,7 @@ class _PermissionBanner extends StatelessWidget {
           TextButton(
             onPressed: onAllow,
             style: TextButton.styleFrom(
-              foregroundColor: AppTheme.upcomingAccent,
+              foregroundColor: AppTheme.warnAccent,
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               minimumSize: Size.zero,
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,

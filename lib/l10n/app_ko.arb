@@ -248,5 +248,88 @@
   "form_section_basic": "기본 정보",
   "@form_section_basic": {},
   "form_section_schedule": "일정 정보",
-  "@form_section_schedule": {}
+  "@form_section_schedule": {},
+
+  "home_summary_today": "오늘",
+  "@home_summary_today": {},
+  "home_summary_this_week": "이번 주",
+  "@home_summary_this_week": {},
+  "home_summary_total": "전체",
+  "@home_summary_total": {},
+
+  "calendar_title": "캘린더",
+  "@calendar_title": {},
+  "calendar_no_items_for_day": "이 날에 등록된 항목이 없어요",
+  "@calendar_no_items_for_day": {},
+
+  "history_title": "완료 이력",
+  "@history_title": {},
+  "history_subtitle": "완료한 항목 모아보기",
+  "@history_subtitle": {},
+  "history_empty": "아직 완료한 항목이 없어요",
+  "@history_empty": {},
+  "history_due_prefix": "예정 {date}",
+  "@history_due_prefix": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+
+  "trash_title": "휴지통",
+  "@trash_title": {},
+  "trash_subtitle": "삭제한 항목 복원",
+  "@trash_subtitle": {},
+  "trash_empty": "휴지통이 비어있어요",
+  "@trash_empty": {},
+  "trash_info_banner": "삭제한 항목은 복원할 수 있어요",
+  "@trash_info_banner": {},
+  "trash_empty_button": "비우기",
+  "@trash_empty_button": {},
+  "trash_restore_tooltip": "복원",
+  "@trash_restore_tooltip": {},
+  "trash_permanent_delete_tooltip": "영구 삭제",
+  "@trash_permanent_delete_tooltip": {},
+  "trash_restore_toast": "복원되었어요",
+  "@trash_restore_toast": {},
+  "trash_permanent_delete_title": "영구 삭제",
+  "@trash_permanent_delete_title": {},
+  "trash_permanent_delete_body": "이 항목을 완전히 삭제할까요?\n삭제하면 복원할 수 없어요.",
+  "@trash_permanent_delete_body": {},
+  "trash_permanent_delete_cta": "영구 삭제",
+  "@trash_permanent_delete_cta": {},
+  "trash_permanent_delete_toast": "영구 삭제되었어요",
+  "@trash_permanent_delete_toast": {},
+  "trash_empty_confirm_title": "휴지통 비우기",
+  "@trash_empty_confirm_title": {},
+  "trash_empty_confirm_body": "휴지통의 모든 항목을 영구 삭제할까요?\n복원할 수 없어요.",
+  "@trash_empty_confirm_body": {},
+  "trash_empty_confirm_cta": "비우기",
+  "@trash_empty_confirm_cta": {},
+  "trash_emptied_toast": "휴지통을 비웠어요",
+  "@trash_emptied_toast": {},
+  "trash_deleted_at": "{date} 삭제",
+  "@trash_deleted_at": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+
+  "settings_records_section": "기록",
+  "@settings_records_section": {},
+
+  "date_picker_title": "날짜 및 시간",
+  "@date_picker_title": {},
+  "date_picker_confirm": "확인",
+  "@date_picker_confirm": {},
+
+  "settings_language_section": "언어",
+  "@settings_language_section": {},
+  "settings_language": "언어",
+  "@settings_language": {},
+  "settings_language_system": "시스템 기본",
+  "@settings_language_system": {},
+  "settings_language_korean": "한국어",
+  "@settings_language_korean": {},
+  "settings_language_english": "English",
+  "@settings_language_english": {}
 }

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../history/completion_event.dart';
 import '../notifications/notification_providers.dart';
 import 'reminder_item.dart';
 import 'reminder_providers.dart';
@@ -88,7 +89,75 @@ Future<void> deleteReminderAction({
   if (notifId != null) {
     await scheduler.cancel(notifId);
   }
+  // softDelete clears notificationId in DB
+  await repo.softDelete(id);
+}
+
+Future<void> restoreReminderAction({
+  required WidgetRef ref,
+  required int id,
+  required NotificationCopyBuilder copyFor,
+}) async {
+  final repo = ref.read(reminderRepositoryProvider);
+  final scheduler = ref.read(notificationSchedulerProvider);
+
+  final item = await repo.getById(id);
+  if (item == null) return;
+
+  // Clear soft delete state
+  item.deletedAt = null;
+  item.notificationId = null;
+
+  // For repeat items past their due date, advance to next future occurrence
+  final now = DateTime.now();
+  var localDue = item.dueAt.toLocal();
+
+  if (item.repeatType != RepeatType.once && !localDue.isAfter(now)) {
+    localDue = advanceUntilFutureLocal(
+      localDue,
+      item.repeatType,
+      now,
+      anchorDay: item.anchorDay,
+      anchorMonth: item.anchorMonth,
+    );
+    item.dueAt = localDue.toUtc();
+  }
+
+  // Reschedule notification if future
+  final isOnce = item.repeatType == RepeatType.once;
+  final isPastOnce = isOnce && !localDue.isAfter(now);
+
+  if (localDue.isAfter(now) && !isPastOnce) {
+    final copy = copyFor(item);
+    final ok = await scheduler.schedule(
+      id: item.id,
+      at: localDue,
+      title: copy.title,
+      body: copy.body,
+    );
+    if (ok) {
+      item.notificationId = item.id;
+    }
+  }
+
+  // Past once item: archive
+  if (isPastOnce) {
+    item.isArchived = true;
+  }
+
+  await repo.save(item);
+}
+
+Future<void> permanentDeleteAction({
+  required WidgetRef ref,
+  required int id,
+}) async {
+  final repo = ref.read(reminderRepositoryProvider);
   await repo.delete(id);
+}
+
+Future<void> emptyTrashAction({required WidgetRef ref}) async {
+  await ref.read(reminderRepositoryProvider).emptyTrash();
 }
 
 Future<void> markDoneAction({
@@ -107,6 +176,15 @@ Future<void> markDoneAction({
     await scheduler.cancel(item.notificationId!);
     item.notificationId = null;
   }
+
+  // Record completion event
+  final completionEvent = CompletionEvent()
+    ..itemId = item.id
+    ..title = item.title
+    ..category = item.category
+    ..completedAt = nowUtc
+    ..dueAtAtCompletion = item.dueAt;
+  await repo.addCompletionEvent(completionEvent);
 
   item.completedCount += 1;
   item.lastCompletedAt = nowUtc;
@@ -159,53 +237,58 @@ Future<void> catchUpAction({
   final items = await repo.getAllActive();
 
   for (final item in items) {
-    var localDue = item.dueAt.toLocal();
-    var dirty = false;
+    try {
+      var localDue = item.dueAt.toLocal();
+      var dirty = false;
 
-    if (item.repeatType != RepeatType.once && !localDue.isAfter(now)) {
-      final advanced = advanceUntilFutureLocal(
-        localDue,
-        item.repeatType,
-        now,
-        anchorDay: item.anchorDay ?? localDue.day,
-        anchorMonth: item.anchorMonth ?? localDue.month,
-      );
-      if (advanced != localDue) {
-        item.dueAt = advanced.toUtc();
-        localDue = advanced;
-        dirty = true;
+      if (item.repeatType != RepeatType.once && !localDue.isAfter(now)) {
+        final advanced = advanceUntilFutureLocal(
+          localDue,
+          item.repeatType,
+          now,
+          anchorDay: item.anchorDay ?? localDue.day,
+          anchorMonth: item.anchorMonth ?? localDue.month,
+        );
+        if (advanced != localDue) {
+          item.dueAt = advanced.toUtc();
+          localDue = advanced;
+          dirty = true;
+        }
       }
-    }
 
-    final isOnce = item.repeatType == RepeatType.once;
-    final isPastOnce = isOnce && !localDue.isAfter(now);
+      final isOnce = item.repeatType == RepeatType.once;
+      final isPastOnce = isOnce && !localDue.isAfter(now);
 
-    if (isPastOnce) {
-      if (item.notificationId != null) {
-        await scheduler.cancel(item.notificationId!);
-        item.notificationId = null;
-        dirty = true;
+      if (isPastOnce) {
+        if (item.notificationId != null) {
+          await scheduler.cancel(item.notificationId!);
+          item.notificationId = null;
+          dirty = true;
+        }
+      } else if (localDue.isAfter(now)) {
+        if (item.notificationId != null) {
+          await scheduler.cancel(item.notificationId!);
+        }
+        final copy = copyFor(item);
+        final ok = await scheduler.schedule(
+          id: item.id,
+          at: localDue,
+          title: copy.title,
+          body: copy.body,
+        );
+        final newNotifId = ok ? item.id : null;
+        if (newNotifId != item.notificationId) {
+          item.notificationId = newNotifId;
+          dirty = true;
+        }
       }
-    } else if (localDue.isAfter(now)) {
-      if (item.notificationId != null) {
-        await scheduler.cancel(item.notificationId!);
-      }
-      final copy = copyFor(item);
-      final ok = await scheduler.schedule(
-        id: item.id,
-        at: localDue,
-        title: copy.title,
-        body: copy.body,
-      );
-      final newNotifId = ok ? item.id : null;
-      if (newNotifId != item.notificationId) {
-        item.notificationId = newNotifId;
-        dirty = true;
-      }
-    }
 
-    if (dirty) {
-      await repo.save(item);
+      if (dirty) {
+        await repo.save(item);
+      }
+    } catch (_) {
+      // Skip individual item failures, continue with others
+      continue;
     }
   }
 }

@@ -18,7 +18,7 @@ import 'app_localizations_ko.dart';
 /// `supportedLocales` list. For example:
 ///
 /// ```dart
-/// import 'gen_l10n/app_localizations.dart';
+/// import 'generated/app_localizations.dart';
 ///
 /// return MaterialApp(
 ///   localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -706,6 +706,210 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'일정 정보'**
   String get form_section_schedule;
+
+  /// No description provided for @home_summary_today.
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘'**
+  String get home_summary_today;
+
+  /// No description provided for @home_summary_this_week.
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 주'**
+  String get home_summary_this_week;
+
+  /// No description provided for @home_summary_total.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체'**
+  String get home_summary_total;
+
+  /// No description provided for @calendar_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'캘린더'**
+  String get calendar_title;
+
+  /// No description provided for @calendar_no_items_for_day.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 날에 등록된 항목이 없어요'**
+  String get calendar_no_items_for_day;
+
+  /// No description provided for @history_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'완료 이력'**
+  String get history_title;
+
+  /// No description provided for @history_subtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'완료한 항목 모아보기'**
+  String get history_subtitle;
+
+  /// No description provided for @history_empty.
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 완료한 항목이 없어요'**
+  String get history_empty;
+
+  /// No description provided for @history_due_prefix.
+  ///
+  /// In ko, this message translates to:
+  /// **'예정 {date}'**
+  String history_due_prefix(String date);
+
+  /// No description provided for @trash_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'휴지통'**
+  String get trash_title;
+
+  /// No description provided for @trash_subtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제한 항목 복원'**
+  String get trash_subtitle;
+
+  /// No description provided for @trash_empty.
+  ///
+  /// In ko, this message translates to:
+  /// **'휴지통이 비어있어요'**
+  String get trash_empty;
+
+  /// No description provided for @trash_info_banner.
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제한 항목은 복원할 수 있어요'**
+  String get trash_info_banner;
+
+  /// No description provided for @trash_empty_button.
+  ///
+  /// In ko, this message translates to:
+  /// **'비우기'**
+  String get trash_empty_button;
+
+  /// No description provided for @trash_restore_tooltip.
+  ///
+  /// In ko, this message translates to:
+  /// **'복원'**
+  String get trash_restore_tooltip;
+
+  /// No description provided for @trash_permanent_delete_tooltip.
+  ///
+  /// In ko, this message translates to:
+  /// **'영구 삭제'**
+  String get trash_permanent_delete_tooltip;
+
+  /// No description provided for @trash_restore_toast.
+  ///
+  /// In ko, this message translates to:
+  /// **'복원되었어요'**
+  String get trash_restore_toast;
+
+  /// No description provided for @trash_permanent_delete_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'영구 삭제'**
+  String get trash_permanent_delete_title;
+
+  /// No description provided for @trash_permanent_delete_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 항목을 완전히 삭제할까요?\n삭제하면 복원할 수 없어요.'**
+  String get trash_permanent_delete_body;
+
+  /// No description provided for @trash_permanent_delete_cta.
+  ///
+  /// In ko, this message translates to:
+  /// **'영구 삭제'**
+  String get trash_permanent_delete_cta;
+
+  /// No description provided for @trash_permanent_delete_toast.
+  ///
+  /// In ko, this message translates to:
+  /// **'영구 삭제되었어요'**
+  String get trash_permanent_delete_toast;
+
+  /// No description provided for @trash_empty_confirm_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'휴지통 비우기'**
+  String get trash_empty_confirm_title;
+
+  /// No description provided for @trash_empty_confirm_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'휴지통의 모든 항목을 영구 삭제할까요?\n복원할 수 없어요.'**
+  String get trash_empty_confirm_body;
+
+  /// No description provided for @trash_empty_confirm_cta.
+  ///
+  /// In ko, this message translates to:
+  /// **'비우기'**
+  String get trash_empty_confirm_cta;
+
+  /// No description provided for @trash_emptied_toast.
+  ///
+  /// In ko, this message translates to:
+  /// **'휴지통을 비웠어요'**
+  String get trash_emptied_toast;
+
+  /// No description provided for @trash_deleted_at.
+  ///
+  /// In ko, this message translates to:
+  /// **'{date} 삭제'**
+  String trash_deleted_at(String date);
+
+  /// No description provided for @settings_records_section.
+  ///
+  /// In ko, this message translates to:
+  /// **'기록'**
+  String get settings_records_section;
+
+  /// No description provided for @date_picker_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'날짜 및 시간'**
+  String get date_picker_title;
+
+  /// No description provided for @date_picker_confirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'확인'**
+  String get date_picker_confirm;
+
+  /// No description provided for @settings_language_section.
+  ///
+  /// In ko, this message translates to:
+  /// **'언어'**
+  String get settings_language_section;
+
+  /// No description provided for @settings_language.
+  ///
+  /// In ko, this message translates to:
+  /// **'언어'**
+  String get settings_language;
+
+  /// No description provided for @settings_language_system.
+  ///
+  /// In ko, this message translates to:
+  /// **'시스템 기본'**
+  String get settings_language_system;
+
+  /// No description provided for @settings_language_korean.
+  ///
+  /// In ko, this message translates to:
+  /// **'한국어'**
+  String get settings_language_korean;
+
+  /// No description provided for @settings_language_english.
+  ///
+  /// In ko, this message translates to:
+  /// **'English'**
+  String get settings_language_english;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

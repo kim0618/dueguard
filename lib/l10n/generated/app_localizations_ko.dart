@@ -2,7 +2,7 @@ import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations.dart';
 
-// ignore_for_file: type=lint, unused_import
+// ignore_for_file: type=lint
 
 /// The translations for Korean (`ko`).
 class AppLocalizationsKo extends AppLocalizations {
@@ -323,4 +323,110 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get form_section_schedule => '일정 정보';
+
+  @override
+  String get home_summary_today => '오늘';
+
+  @override
+  String get home_summary_this_week => '이번 주';
+
+  @override
+  String get home_summary_total => '전체';
+
+  @override
+  String get calendar_title => '캘린더';
+
+  @override
+  String get calendar_no_items_for_day => '이 날에 등록된 항목이 없어요';
+
+  @override
+  String get history_title => '완료 이력';
+
+  @override
+  String get history_subtitle => '완료한 항목 모아보기';
+
+  @override
+  String get history_empty => '아직 완료한 항목이 없어요';
+
+  @override
+  String history_due_prefix(String date) {
+    return '예정 $date';
+  }
+
+  @override
+  String get trash_title => '휴지통';
+
+  @override
+  String get trash_subtitle => '삭제한 항목 복원';
+
+  @override
+  String get trash_empty => '휴지통이 비어있어요';
+
+  @override
+  String get trash_info_banner => '삭제한 항목은 복원할 수 있어요';
+
+  @override
+  String get trash_empty_button => '비우기';
+
+  @override
+  String get trash_restore_tooltip => '복원';
+
+  @override
+  String get trash_permanent_delete_tooltip => '영구 삭제';
+
+  @override
+  String get trash_restore_toast => '복원되었어요';
+
+  @override
+  String get trash_permanent_delete_title => '영구 삭제';
+
+  @override
+  String get trash_permanent_delete_body => '이 항목을 완전히 삭제할까요?\n삭제하면 복원할 수 없어요.';
+
+  @override
+  String get trash_permanent_delete_cta => '영구 삭제';
+
+  @override
+  String get trash_permanent_delete_toast => '영구 삭제되었어요';
+
+  @override
+  String get trash_empty_confirm_title => '휴지통 비우기';
+
+  @override
+  String get trash_empty_confirm_body => '휴지통의 모든 항목을 영구 삭제할까요?\n복원할 수 없어요.';
+
+  @override
+  String get trash_empty_confirm_cta => '비우기';
+
+  @override
+  String get trash_emptied_toast => '휴지통을 비웠어요';
+
+  @override
+  String trash_deleted_at(String date) {
+    return '$date 삭제';
+  }
+
+  @override
+  String get settings_records_section => '기록';
+
+  @override
+  String get date_picker_title => '날짜 및 시간';
+
+  @override
+  String get date_picker_confirm => '확인';
+
+  @override
+  String get settings_language_section => '언어';
+
+  @override
+  String get settings_language => '언어';
+
+  @override
+  String get settings_language_system => '시스템 기본';
+
+  @override
+  String get settings_language_korean => '한국어';
+
+  @override
+  String get settings_language_english => 'English';
 }

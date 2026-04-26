@@ -126,5 +126,56 @@
   "settings_notification_open_settings": "Open system settings",
 
   "form_section_basic": "Basic info",
-  "form_section_schedule": "Schedule"
+  "form_section_schedule": "Schedule",
+
+  "home_summary_today": "Today",
+  "home_summary_this_week": "This week",
+  "home_summary_total": "Total",
+
+  "calendar_title": "Calendar",
+  "calendar_no_items_for_day": "No items for this day",
+
+  "history_title": "Completion history",
+  "history_subtitle": "View completed items",
+  "history_empty": "No completed items yet",
+  "history_due_prefix": "Due {date}",
+  "@history_due_prefix": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+
+  "trash_title": "Trash",
+  "trash_subtitle": "Restore deleted items",
+  "trash_empty": "Trash is empty",
+  "trash_info_banner": "Deleted items can be restored",
+  "trash_empty_button": "Empty",
+  "trash_restore_tooltip": "Restore",
+  "trash_permanent_delete_tooltip": "Delete permanently",
+  "trash_restore_toast": "Restored",
+  "trash_permanent_delete_title": "Delete permanently",
+  "trash_permanent_delete_body": "Permanently delete this item?\nThis cannot be undone.",
+  "trash_permanent_delete_cta": "Delete",
+  "trash_permanent_delete_toast": "Item permanently deleted",
+  "trash_empty_confirm_title": "Empty trash",
+  "trash_empty_confirm_body": "Delete all items in trash?\nThis cannot be undone.",
+  "trash_empty_confirm_cta": "Empty",
+  "trash_emptied_toast": "Trash emptied",
+  "trash_deleted_at": "Deleted {date}",
+  "@trash_deleted_at": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+
+  "settings_records_section": "Records",
+
+  "date_picker_title": "Date and time",
+  "date_picker_confirm": "Confirm",
+
+  "settings_language_section": "Language",
+  "settings_language": "Language",
+  "settings_language_system": "System default",
+  "settings_language_korean": "한국어",
+  "settings_language_english": "English"
 }
