@@ -133,8 +133,9 @@ class HomeScreen extends ConsumerWidget {
     }
 
     final today = DateUtils.dateOnly(DateTime.now());
+    // 오늘 + 과거 미완료 항목을 오늘 섹션에 표시
     final todayItems = items
-        .where((i) => DateUtils.dateOnly(i.dueAt.toLocal()) == today)
+        .where((i) => !DateUtils.dateOnly(i.dueAt.toLocal()).isAfter(today))
         .toList();
     final thisWeekItems = items.where((i) {
       final due = DateUtils.dateOnly(i.dueAt.toLocal());

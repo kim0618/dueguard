@@ -226,7 +226,7 @@
   "past_time_once_confirm_cta": "그대로 저장",
   "@past_time_once_confirm_cta": {},
 
-  "badge_overdue": "기한 지남",
+  "badge_overdue": "미완료",
   "@badge_overdue": {},
   "badge_notification_on": "알림 예약됨",
   "@badge_notification_on": {},

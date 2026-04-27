@@ -25,6 +25,10 @@ class ReminderCard extends StatelessWidget {
     return due.difference(today).inDays;
   }
 
+  bool _isOverdue() {
+    return item.dueAt.toLocal().isBefore(DateTime.now());
+  }
+
   Color _barColor(int diff) {
     if (diff <= 0) return AppTheme.todayAccent;
     if (diff == 1) return AppTheme.warnAccent;
@@ -115,7 +119,7 @@ class ReminderCard extends StatelessWidget {
                               fg: categoryFgColor(item.category),
                             ),
                             const SizedBox(width: 4),
-                            _UrgencyChip(diff: diff, l10n: l10n),
+                            _UrgencyChip(diff: diff, overdue: _isOverdue(), l10n: l10n),
                           ],
                         ),
                         const SizedBox(height: 4),
@@ -238,8 +242,9 @@ class _CategoryChip extends StatelessWidget {
 }
 
 class _UrgencyChip extends StatelessWidget {
-  const _UrgencyChip({required this.diff, required this.l10n});
+  const _UrgencyChip({required this.diff, required this.overdue, required this.l10n});
   final int diff;
+  final bool overdue;
   final AppLocalizations l10n;
 
   @override
@@ -248,7 +253,7 @@ class _UrgencyChip extends StatelessWidget {
     final Color fg;
     final String label;
 
-    if (diff < 0) {
+    if (diff < 0 || overdue) {
       bg = AppTheme.todayAccent.withValues(alpha: 0.10);
       fg = const Color(0xFFCF3B40);
       label = l10n.badge_overdue;

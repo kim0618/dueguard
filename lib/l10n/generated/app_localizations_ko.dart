@@ -295,7 +295,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get past_time_once_confirm_cta => '그대로 저장';
 
   @override
-  String get badge_overdue => '기한 지남';
+  String get badge_overdue => '미완료';
 
   @override
   String get badge_notification_on => '알림 예약됨';

@@ -650,7 +650,7 @@ abstract class AppLocalizations {
   /// No description provided for @badge_overdue.
   ///
   /// In ko, this message translates to:
-  /// **'기한 지남'**
+  /// **'미완료'**
   String get badge_overdue;
 
   /// No description provided for @badge_notification_on.
