@@ -354,6 +354,7 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
   }
 
   Future<void> _pickDateTime(BuildContext context) async {
+    FocusScope.of(context).unfocus();
     DateTime tempDate = _dueAt;
     final l10n = AppLocalizations.of(context)!;
 
