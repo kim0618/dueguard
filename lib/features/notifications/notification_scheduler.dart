@@ -32,7 +32,7 @@ class NotificationScheduler {
       tz.setLocalLocation(tz.getLocation('UTC'));
     }
 
-    const android = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const android = AndroidInitializationSettings('@drawable/ic_notification');
     const settings = InitializationSettings(android: android);
     await _plugin.initialize(settings);
 
@@ -111,6 +111,7 @@ class NotificationScheduler {
       channelDescription: _channelDescription,
       importance: Importance.high,
       priority: Priority.high,
+      icon: '@drawable/ic_notification',
     );
     const details = NotificationDetails(android: androidDetails);
     try {
@@ -147,6 +148,7 @@ class NotificationScheduler {
       channelDescription: _channelDescription,
       importance: Importance.high,
       priority: Priority.high,
+      icon: '@drawable/ic_notification',
     );
     const details = NotificationDetails(android: androidDetails);
 

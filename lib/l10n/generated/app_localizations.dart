@@ -242,7 +242,7 @@ abstract class AppLocalizations {
   /// No description provided for @home_empty_body.
   ///
   /// In ko, this message translates to:
-  /// **'카드 대금, 구독 갱신, 보험 날짜 - 잊기 전에 등록해두세요.'**
+  /// **'카드 대금, 구독 갱신, 보험 날짜\n잊기 전에 등록해두세요.'**
   String get home_empty_body;
 
   /// No description provided for @home_no_upcoming_title.

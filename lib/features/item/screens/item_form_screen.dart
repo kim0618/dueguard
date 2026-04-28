@@ -91,19 +91,25 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
       ),
       body: !_loaded
           ? const Center(child: CircularProgressIndicator())
-          : Form(
-              key: _formKey,
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
-                children: [
-                  _buildBasicSection(context, l10n),
-                  const SizedBox(height: 16),
-                  _buildScheduleSection(context, l10n, locale),
-                  const SizedBox(height: 16),
-                  _buildNoteSection(context, l10n),
-                  const SizedBox(height: 28),
-                  _buildSaveButton(context, l10n),
-                ],
+          : GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+                  children: [
+                    _buildBasicSection(context, l10n),
+                    const SizedBox(height: 16),
+                    _buildScheduleSection(context, l10n, locale),
+                    const SizedBox(height: 16),
+                    _buildNoteSection(context, l10n),
+                    const SizedBox(height: 28),
+                    _buildSaveButton(context, l10n),
+                  ],
+                ),
               ),
             ),
     );
@@ -460,6 +466,7 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
         );
       },
     );
+    if (context.mounted) FocusScope.of(context).unfocus();
   }
 
   Future<void> _save(BuildContext context, AppLocalizations l10n) async {

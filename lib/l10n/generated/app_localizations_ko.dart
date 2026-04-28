@@ -83,7 +83,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get home_empty_title => '아직 등록된 항목이 없어요';
 
   @override
-  String get home_empty_body => '카드 대금, 구독 갱신, 보험 날짜 - 잊기 전에 등록해두세요.';
+  String get home_empty_body => '카드 대금, 구독 갱신, 보험 날짜\n잊기 전에 등록해두세요.';
 
   @override
   String get home_no_upcoming_title => '당분간 예정된 항목이 없어요';
