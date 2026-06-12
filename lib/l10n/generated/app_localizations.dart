@@ -365,6 +365,36 @@ abstract class AppLocalizations {
   /// **'매년'**
   String get repeat_yearly;
 
+  /// No description provided for @repeat_schedule_daily.
+  ///
+  /// In ko, this message translates to:
+  /// **'매일 {time}'**
+  String repeat_schedule_daily(String time);
+
+  /// No description provided for @repeat_schedule_weekly.
+  ///
+  /// In ko, this message translates to:
+  /// **'매주 {weekday} {time}'**
+  String repeat_schedule_weekly(String weekday, String time);
+
+  /// No description provided for @repeat_schedule_monthly.
+  ///
+  /// In ko, this message translates to:
+  /// **'매달 {day}일 {time}'**
+  String repeat_schedule_monthly(int day, String time);
+
+  /// No description provided for @repeat_schedule_yearly.
+  ///
+  /// In ko, this message translates to:
+  /// **'매년 {month}월 {day}일 {time}'**
+  String repeat_schedule_yearly(int month, int day, String time);
+
+  /// No description provided for @next_reminder_prefix.
+  ///
+  /// In ko, this message translates to:
+  /// **'다음 알림 {datetime}'**
+  String next_reminder_prefix(String datetime);
+
   /// No description provided for @item_title_label.
   ///
   /// In ko, this message translates to:

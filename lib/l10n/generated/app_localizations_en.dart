@@ -146,6 +146,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get repeat_yearly => 'Yearly';
 
   @override
+  String repeat_schedule_daily(String time) {
+    return 'Daily at $time';
+  }
+
+  @override
+  String repeat_schedule_weekly(String weekday, String time) {
+    return 'Every $weekday at $time';
+  }
+
+  @override
+  String repeat_schedule_monthly(int day, String time) {
+    return 'Monthly on day $day at $time';
+  }
+
+  @override
+  String repeat_schedule_yearly(int month, int day, String time) {
+    return 'Yearly on $month/$day at $time';
+  }
+
+  @override
+  String next_reminder_prefix(String datetime) {
+    return 'Next reminder $datetime';
+  }
+
+  @override
   String get item_title_label => 'Item name';
 
   @override

@@ -105,6 +105,41 @@
   "repeat_yearly": "매년",
   "@repeat_yearly": {},
 
+  "repeat_schedule_daily": "매일 {time}",
+  "@repeat_schedule_daily": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "repeat_schedule_weekly": "매주 {weekday} {time}",
+  "@repeat_schedule_weekly": {
+    "placeholders": {
+      "weekday": { "type": "String" },
+      "time": { "type": "String" }
+    }
+  },
+  "repeat_schedule_monthly": "매달 {day}일 {time}",
+  "@repeat_schedule_monthly": {
+    "placeholders": {
+      "day": { "type": "int" },
+      "time": { "type": "String" }
+    }
+  },
+  "repeat_schedule_yearly": "매년 {month}월 {day}일 {time}",
+  "@repeat_schedule_yearly": {
+    "placeholders": {
+      "month": { "type": "int" },
+      "day": { "type": "int" },
+      "time": { "type": "String" }
+    }
+  },
+  "next_reminder_prefix": "다음 알림 {datetime}",
+  "@next_reminder_prefix": {
+    "placeholders": {
+      "datetime": { "type": "String" }
+    }
+  },
+
   "item_title_label": "항목 이름",
   "@item_title_label": {},
   "item_title_hint": "예: OO카드 결제일, 넷플릭스 해지",

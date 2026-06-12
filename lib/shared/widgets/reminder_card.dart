@@ -133,7 +133,7 @@ class ReminderCard extends StatelessWidget {
                             const SizedBox(width: 3),
                             Expanded(
                               child: Text(
-                                du.formatFullDateTime(item.dueAt, locale),
+                                du.formatRepeatSchedule(item, l10n, locale),
                                 style: const TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w500,

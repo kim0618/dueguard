@@ -146,6 +146,31 @@ class AppLocalizationsKo extends AppLocalizations {
   String get repeat_yearly => '매년';
 
   @override
+  String repeat_schedule_daily(String time) {
+    return '매일 $time';
+  }
+
+  @override
+  String repeat_schedule_weekly(String weekday, String time) {
+    return '매주 $weekday $time';
+  }
+
+  @override
+  String repeat_schedule_monthly(int day, String time) {
+    return '매달 $day일 $time';
+  }
+
+  @override
+  String repeat_schedule_yearly(int month, int day, String time) {
+    return '매년 $month월 $day일 $time';
+  }
+
+  @override
+  String next_reminder_prefix(String datetime) {
+    return '다음 알림 $datetime';
+  }
+
+  @override
   String get item_title_label => '항목 이름';
 
   @override

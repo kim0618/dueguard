@@ -365,7 +365,7 @@ class _InfoCard extends StatelessWidget {
           _InfoRow(
             icon: Icons.calendar_today_outlined,
             label: l10n.date_time_label,
-            value: du.formatFullDateTime(item.dueAt, locale),
+            value: du.formatRepeatSchedule(item, l10n, locale),
           ),
           _divider(),
           _InfoRow(

@@ -56,6 +56,12 @@
   "repeat_monthly": "Monthly",
   "repeat_yearly": "Yearly",
 
+  "repeat_schedule_daily": "Daily at {time}",
+  "repeat_schedule_weekly": "Every {weekday} at {time}",
+  "repeat_schedule_monthly": "Monthly on day {day} at {time}",
+  "repeat_schedule_yearly": "Yearly on {month}/{day} at {time}",
+  "next_reminder_prefix": "Next reminder {datetime}",
+
   "item_title_label": "Item name",
   "item_title_hint": "e.g. Credit card bill, Netflix cancellation",
   "item_date_label": "Date & time",

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../features/item/reminder_item.dart';
 
 String formatRelativeDate(DateTime dueAt, AppLocalizations l10n) {
   final local = dueAt.toLocal();
@@ -45,6 +46,34 @@ String formatNotificationBody(DateTime dueAt, String locale) {
     return DateFormat('M월 d일 a h:mm', 'ko').format(local);
   }
   return DateFormat('MMM d, h:mm a', 'en').format(local);
+}
+
+/// 반복 유형에 맞춰 일정을 요약 표시한다.
+/// once는 절대 날짜시간, 그 외는 주기 + 시각으로 보여준다.
+/// 예) 매일 오후 4:45 / 매주 월요일 오후 4:45 / 매달 27일 오후 4:45 / 매년 4월 27일 오후 4:45
+String formatRepeatSchedule(
+  ReminderItem item,
+  AppLocalizations l10n,
+  String locale,
+) {
+  final local = item.dueAt.toLocal();
+  final time = formatTimeOnly(item.dueAt, locale);
+  switch (item.repeatType) {
+    case RepeatType.once:
+      return formatFullDateTime(item.dueAt, locale);
+    case RepeatType.daily:
+      return l10n.repeat_schedule_daily(time);
+    case RepeatType.weekly:
+      final weekday = DateFormat('EEEE', locale).format(local);
+      return l10n.repeat_schedule_weekly(weekday, time);
+    case RepeatType.monthly:
+      final day = item.anchorDay ?? local.day;
+      return l10n.repeat_schedule_monthly(day, time);
+    case RepeatType.yearly:
+      final day = item.anchorDay ?? local.day;
+      final month = item.anchorMonth ?? local.month;
+      return l10n.repeat_schedule_yearly(month, day, time);
+  }
 }
 
 DateTime defaultDueAt() {
