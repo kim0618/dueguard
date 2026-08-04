@@ -6,6 +6,7 @@ import '../../../features/item/reminder_providers.dart';
 import '../../../features/notifications/notification_providers.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/theme/app_theme.dart';
+import '../../../shared/utils/category_utils.dart';
 import '../../../shared/utils/date_utils.dart' as du;
 import '../../../shared/widgets/empty_state.dart';
 import '../../../shared/widgets/reminder_card.dart';
@@ -123,12 +124,19 @@ class HomeScreen extends ConsumerWidget {
     List<ReminderItem> items,
   ) {
     if (items.isEmpty) {
-      return EmptyState(
-        icon: Icons.shield_outlined,
-        title: l10n.home_empty_title,
-        body: l10n.home_empty_body,
-        ctaLabel: l10n.onboarding_a_cta,
-        onCta: () => _openAddScreen(context, ref),
+      return Column(
+        children: [
+          Expanded(
+            child: EmptyState(
+              icon: Icons.shield_outlined,
+              title: l10n.home_empty_title,
+              body: l10n.home_empty_body,
+              ctaLabel: l10n.onboarding_a_cta,
+              onCta: () => _openAddScreen(context, ref),
+            ),
+          ),
+          _PresetQuickAdd(l10n: l10n, ref: ref),
+        ],
       );
     }
 
@@ -239,17 +247,30 @@ class HomeScreen extends ConsumerWidget {
 
     if (confirmed == true && context.mounted) {
       final locale = Localizations.localeOf(context).languageCode;
-      await markDoneAction(
+      NotificationCopy buildCopy(ReminderItem i) => NotificationCopy(
+            title: i.title,
+            body: du.formatNotificationBody(i.dueAt, locale),
+          );
+      final undo = await markDoneAction(
         ref: ref,
         id: item.id,
-        copyFor: (i) => NotificationCopy(
-          title: i.title,
-          body: du.formatNotificationBody(i.dueAt, locale),
-        ),
+        copyFor: buildCopy,
       );
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.toast_item_done)),
+          SnackBar(
+            content: Text(l10n.toast_item_done),
+            action: undo == null
+                ? null
+                : SnackBarAction(
+                    label: l10n.undo_button,
+                    onPressed: () => undoMarkDoneAction(
+                      ref: ref,
+                      undo: undo,
+                      copyFor: buildCopy,
+                    ),
+                  ),
+          ),
         );
       }
     }
@@ -586,4 +607,123 @@ class _PermissionBanner extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 빈 화면에서 자주 등록하는 항목 몇 개를 원탭으로 미리 채워
+/// 첫 항목 등록 장벽을 낮추는 프리셋 칩 목록.
+/// 세금류는 매년 반복 + 다음 발생 월/일로 자동 채워진다.
+class _PresetQuickAdd extends StatelessWidget {
+  const _PresetQuickAdd({required this.l10n, required this.ref});
+
+  final AppLocalizations l10n;
+  final WidgetRef ref;
+
+  List<_Preset> _presets() => [
+        _Preset(
+          label: l10n.preset_card_bill,
+          category: Category.card,
+          repeat: RepeatType.monthly,
+          dueAt: du.defaultDueAt(),
+        ),
+        _Preset(
+          label: l10n.preset_netflix,
+          category: Category.subscription,
+          repeat: RepeatType.monthly,
+          dueAt: du.defaultDueAt(),
+        ),
+        _Preset(
+          label: l10n.preset_car_tax,
+          category: Category.tax,
+          repeat: RepeatType.yearly,
+          dueAt: du.nextAnnualOccurrence(6, 30),
+        ),
+        _Preset(
+          label: l10n.preset_income_tax,
+          category: Category.tax,
+          repeat: RepeatType.yearly,
+          dueAt: du.nextAnnualOccurrence(5, 31),
+        ),
+      ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.preset_quick_add_label,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: AppTheme.textSecondary,
+              letterSpacing: 0.2,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: _presets().map((preset) {
+              return GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ItemFormScreen(
+                      presetTitle: preset.label,
+                      presetCategory: preset.category,
+                      presetRepeat: preset.repeat,
+                      presetDueAt: preset.dueAt,
+                    ),
+                  ),
+                ),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+                  decoration: BoxDecoration(
+                    color: categoryBgColor(preset.category),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        categoryIcon(preset.category),
+                        size: 15,
+                        color: categoryFgColor(preset.category),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        preset.label,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: categoryFgColor(preset.category),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Preset {
+  const _Preset({
+    required this.label,
+    required this.category,
+    required this.repeat,
+    required this.dueAt,
+  });
+
+  final String label;
+  final Category category;
+  final RepeatType repeat;
+  final DateTime dueAt;
 }

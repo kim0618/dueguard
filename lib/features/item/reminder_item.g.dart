@@ -141,7 +141,7 @@ const ReminderItemSchema = CollectionSchema(
   getId: _reminderItemGetId,
   getLinks: _reminderItemGetLinks,
   attach: _reminderItemAttach,
-  version: '3.1.0+1',
+  version: '3.3.2',
 );
 
 int _reminderItemEstimateSize(

@@ -62,7 +62,8 @@ import 'app_localizations_ko.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -70,7 +71,8 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -82,7 +84,8 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -148,6 +151,12 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'취소'**
   String get cancel_button;
+
+  /// No description provided for @undo_button.
+  ///
+  /// In ko, this message translates to:
+  /// **'실행취소'**
+  String get undo_button;
 
   /// No description provided for @delete_button.
   ///
@@ -244,6 +253,36 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'카드 대금, 구독 갱신, 보험 날짜\n잊기 전에 등록해두세요.'**
   String get home_empty_body;
+
+  /// No description provided for @preset_quick_add_label.
+  ///
+  /// In ko, this message translates to:
+  /// **'이런 항목부터 시작해 보세요'**
+  String get preset_quick_add_label;
+
+  /// No description provided for @preset_card_bill.
+  ///
+  /// In ko, this message translates to:
+  /// **'카드 결제일'**
+  String get preset_card_bill;
+
+  /// No description provided for @preset_netflix.
+  ///
+  /// In ko, this message translates to:
+  /// **'넷플릭스 구독'**
+  String get preset_netflix;
+
+  /// No description provided for @preset_car_tax.
+  ///
+  /// In ko, this message translates to:
+  /// **'자동차세 (6월)'**
+  String get preset_car_tax;
+
+  /// No description provided for @preset_income_tax.
+  ///
+  /// In ko, this message translates to:
+  /// **'종합소득세 (5월)'**
+  String get preset_income_tax;
 
   /// No description provided for @home_no_upcoming_title.
   ///
@@ -942,7 +981,8 @@ abstract class AppLocalizations {
   String get settings_language_english;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -951,25 +991,25 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['en', 'ko'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['en', 'ko'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en': return AppLocalizationsEn();
-    case 'ko': return AppLocalizationsKo();
+    case 'en':
+      return AppLocalizationsEn();
+    case 'ko':
+      return AppLocalizationsKo();
   }
 
   throw FlutterError(
-    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
-  );
+      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
 }

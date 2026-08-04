@@ -14,9 +14,22 @@ import '../../../shared/utils/date_utils.dart' as du;
 const _kLastCategoryKey = 'last_category';
 
 class ItemFormScreen extends ConsumerStatefulWidget {
-  const ItemFormScreen({super.key, this.itemId});
+  const ItemFormScreen({
+    super.key,
+    this.itemId,
+    this.presetTitle,
+    this.presetCategory,
+    this.presetRepeat,
+    this.presetDueAt,
+  });
 
   final int? itemId;
+
+  /// 빈 화면 빠른 추가 프리셋으로 진입할 때의 초기값들.
+  final String? presetTitle;
+  final Category? presetCategory;
+  final RepeatType? presetRepeat;
+  final DateTime? presetDueAt;
 
   @override
   ConsumerState<ItemFormScreen> createState() => _ItemFormScreenState();
@@ -42,6 +55,18 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
   }
 
   Future<void> _loadDefaults() async {
+    // 프리셋 진입이면 프리셋 값이 최근 카테고리보다 우선한다.
+    if (!_isEdit && widget.presetTitle != null) {
+      setState(() {
+        _titleController.text = widget.presetTitle!;
+        if (widget.presetCategory != null) _category = widget.presetCategory!;
+        if (widget.presetRepeat != null) _repeatType = widget.presetRepeat!;
+        if (widget.presetDueAt != null) _dueAt = widget.presetDueAt!;
+        _loaded = true;
+      });
+      return;
+    }
+
     final prefs = await SharedPreferences.getInstance();
     final lastCategory = prefs.getString(_kLastCategoryKey);
     if (lastCategory != null) {
@@ -106,9 +131,21 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
                     _buildScheduleSection(context, l10n, locale),
                     const SizedBox(height: 16),
                     _buildNoteSection(context, l10n),
-                    const SizedBox(height: 28),
-                    _buildSaveButton(context, l10n),
                   ],
+                ),
+              ),
+            ),
+      // 키보드가 떠도 저장 버튼이 항상 보이도록 하단에 고정한다.
+      bottomNavigationBar: !_loaded
+          ? null
+          : Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                  child: _buildSaveButton(context, l10n),
                 ),
               ),
             ),
@@ -127,6 +164,7 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
             maxLength: 80,
             maxLines: 2,
             minLines: 1,
+            textInputAction: TextInputAction.done,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                   letterSpacing: -0.2,

@@ -1,4 +1,4 @@
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import '../item/reminder_item.dart';
 
 part 'completion_event.g.dart';

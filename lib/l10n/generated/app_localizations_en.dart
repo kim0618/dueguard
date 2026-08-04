@@ -1,5 +1,5 @@
+// ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -36,6 +36,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancel_button => 'Cancel';
 
   @override
+  String get undo_button => 'Undo';
+
+  @override
   String get delete_button => 'Delete';
 
   @override
@@ -54,7 +57,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mark_done_confirm_title => 'Mark as done?';
 
   @override
-  String get mark_done_confirm_body_repeat => 'The next occurrence will be scheduled automatically.';
+  String get mark_done_confirm_body_repeat =>
+      'The next occurrence will be scheduled automatically.';
 
   @override
   String get mark_done_confirm_body_once => 'This item will be marked as done.';
@@ -63,13 +67,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete_confirm_title => 'Delete this item?';
 
   @override
-  String get delete_confirm_body => 'The notification will also be cancelled. This cannot be undone.';
+  String get delete_confirm_body =>
+      'The notification will also be cancelled. This cannot be undone.';
 
   @override
   String get delete_confirm_cta => 'Delete';
 
   @override
-  String get notification_permission_banner => 'Notifications are off. This app relies on notifications.';
+  String get notification_permission_banner =>
+      'Notifications are off. This app relies on notifications.';
 
   @override
   String get notification_permission_allow_button => 'Allow';
@@ -83,25 +89,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String get home_empty_title => 'No items yet';
 
   @override
-  String get home_empty_body => 'Add card bills, subscriptions, or insurance dates before they slip by.';
+  String get home_empty_body =>
+      'Add card bills, subscriptions, or insurance dates before they slip by.';
+
+  @override
+  String get preset_quick_add_label => 'Try starting with one of these';
+
+  @override
+  String get preset_card_bill => 'Card payment date';
+
+  @override
+  String get preset_netflix => 'Netflix subscription';
+
+  @override
+  String get preset_car_tax => 'Vehicle tax (June)';
+
+  @override
+  String get preset_income_tax => 'Income tax filing (May)';
 
   @override
   String get home_no_upcoming_title => 'Nothing coming up soon';
 
   @override
-  String get home_no_upcoming_body => 'Nothing scheduled in the next 30 days. All items are shown below.';
+  String get home_no_upcoming_body =>
+      'Nothing scheduled in the next 30 days. All items are shown below.';
 
   @override
-  String get item_no_notification_title => 'Notification could not be scheduled';
+  String get item_no_notification_title =>
+      'Notification could not be scheduled';
 
   @override
-  String get item_no_notification_body => 'The selected date has passed, or notification permission is missing. Please check the date.';
+  String get item_no_notification_body =>
+      'The selected date has passed, or notification permission is missing. Please check the date.';
 
   @override
   String get settings_notification_off_title => 'Notifications are off';
 
   @override
-  String get settings_notification_off_body => 'DueGuard relies on notifications. Enable them to receive timely reminders.';
+  String get settings_notification_off_body =>
+      'DueGuard relies on notifications. Enable them to receive timely reminders.';
 
   @override
   String get settings_notification_section => 'Notifications';
@@ -198,7 +224,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get error_date_required => 'Please select a date';
 
   @override
-  String get error_date_past => 'This date has already passed. Select a future date to receive a notification.';
+  String get error_date_past =>
+      'This date has already passed. Select a future date to receive a notification.';
 
   @override
   String get error_save_failed => 'Save failed. Please try again.';
@@ -222,7 +249,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get toast_notification_set => 'Notification scheduled';
 
   @override
-  String get toast_notification_failed => 'Notification scheduling failed. Check permissions.';
+  String get toast_notification_failed =>
+      'Notification scheduling failed. Check permissions.';
 
   @override
   String get date_relative_today => 'Today';
@@ -261,7 +289,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get about_app_description => 'DueGuard reminds you of dates that cost money when missed.';
+  String get about_app_description =>
+      'DueGuard reminds you of dates that cost money when missed.';
 
   @override
   String get about_open_source => 'Open-source licenses';
@@ -308,13 +337,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notification_not_scheduled => 'No notification';
 
   @override
-  String get notification_permission_required => 'Notification permission required';
+  String get notification_permission_required =>
+      'Notification permission required';
 
   @override
   String get onboarding_a_title => 'Keep every money deadline in one place';
 
   @override
-  String get onboarding_a_body => 'Card bills, subscriptions, insurance renewals - they slip by if you don\'t track them.';
+  String get onboarding_a_body =>
+      'Card bills, subscriptions, insurance renewals - they slip by if you don\'t track them.';
 
   @override
   String get onboarding_a_cta => 'Add your first item';
@@ -332,7 +363,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get past_time_once_confirm_title => 'This time has already passed';
 
   @override
-  String get past_time_once_confirm_body => 'A notification will not be scheduled. Save anyway?';
+  String get past_time_once_confirm_body =>
+      'A notification will not be scheduled. Save anyway?';
 
   @override
   String get past_time_once_confirm_cta => 'Save anyway';
@@ -424,7 +456,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trash_permanent_delete_title => 'Delete permanently';
 
   @override
-  String get trash_permanent_delete_body => 'Permanently delete this item?\nThis cannot be undone.';
+  String get trash_permanent_delete_body =>
+      'Permanently delete this item?\nThis cannot be undone.';
 
   @override
   String get trash_permanent_delete_cta => 'Delete';
@@ -436,7 +469,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trash_empty_confirm_title => 'Empty trash';
 
   @override
-  String get trash_empty_confirm_body => 'Delete all items in trash?\nThis cannot be undone.';
+  String get trash_empty_confirm_body =>
+      'Delete all items in trash?\nThis cannot be undone.';
 
   @override
   String get trash_empty_confirm_cta => 'Empty';

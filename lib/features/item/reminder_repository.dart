@@ -1,4 +1,4 @@
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import '../history/completion_event.dart';
 import 'reminder_item.dart';
@@ -73,6 +73,10 @@ class ReminderRepository {
 
   Future<int> addCompletionEvent(CompletionEvent event) async {
     return _isar.writeTxn(() => _isar.completionEvents.put(event));
+  }
+
+  Future<void> deleteCompletionEvent(int id) async {
+    await _isar.writeTxn(() => _isar.completionEvents.delete(id));
   }
 
   Future<void> emptyTrash() async {

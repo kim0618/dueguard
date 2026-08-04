@@ -1,5 +1,5 @@
+// ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -34,6 +34,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get cancel_button => '취소';
+
+  @override
+  String get undo_button => '실행취소';
 
   @override
   String get delete_button => '삭제';
@@ -86,22 +89,40 @@ class AppLocalizationsKo extends AppLocalizations {
   String get home_empty_body => '카드 대금, 구독 갱신, 보험 날짜\n잊기 전에 등록해두세요.';
 
   @override
+  String get preset_quick_add_label => '이런 항목부터 시작해 보세요';
+
+  @override
+  String get preset_card_bill => '카드 결제일';
+
+  @override
+  String get preset_netflix => '넷플릭스 구독';
+
+  @override
+  String get preset_car_tax => '자동차세 (6월)';
+
+  @override
+  String get preset_income_tax => '종합소득세 (5월)';
+
+  @override
   String get home_no_upcoming_title => '당분간 예정된 항목이 없어요';
 
   @override
-  String get home_no_upcoming_body => '30일 이내에 예정된 일정이 없습니다. 모든 항목은 목록 아래에서 확인할 수 있어요.';
+  String get home_no_upcoming_body =>
+      '30일 이내에 예정된 일정이 없습니다. 모든 항목은 목록 아래에서 확인할 수 있어요.';
 
   @override
   String get item_no_notification_title => '알림을 예약할 수 없어요';
 
   @override
-  String get item_no_notification_body => '선택한 날짜가 이미 지났거나, 알림 권한이 없습니다. 날짜를 확인해 주세요.';
+  String get item_no_notification_body =>
+      '선택한 날짜가 이미 지났거나, 알림 권한이 없습니다. 날짜를 확인해 주세요.';
 
   @override
   String get settings_notification_off_title => '알림 권한이 꺼져 있어요';
 
   @override
-  String get settings_notification_off_body => 'DueGuard는 알림이 핵심입니다. 알림을 허용해야 날짜를 제때 받을 수 있어요.';
+  String get settings_notification_off_body =>
+      'DueGuard는 알림이 핵심입니다. 알림을 허용해야 날짜를 제때 받을 수 있어요.';
 
   @override
   String get settings_notification_section => '알림';
@@ -296,7 +317,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get onboarding_a_title => '돈 나가는 날짜, 여기에 모아두세요';
 
   @override
-  String get onboarding_a_body => '카드 대금, 자동결제, 보험 갱신일 - 직접 관리하지 않으면 계속 잊어버립니다.';
+  String get onboarding_a_body =>
+      '카드 대금, 자동결제, 보험 갱신일 - 직접 관리하지 않으면 계속 잊어버립니다.';
 
   @override
   String get onboarding_a_cta => '첫 항목 추가하기';

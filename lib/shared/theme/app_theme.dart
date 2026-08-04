@@ -71,7 +71,7 @@ class AppTheme {
         ),
         iconTheme: IconThemeData(color: onSurface),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: surface,
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -202,7 +202,7 @@ class AppTheme {
         todayBorder: const BorderSide(color: primary, width: 1.5),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         elevation: 0,

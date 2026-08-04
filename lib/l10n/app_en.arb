@@ -11,6 +11,7 @@
 
   "save_button": "Save",
   "cancel_button": "Cancel",
+  "undo_button": "Undo",
   "delete_button": "Delete",
   "edit_button": "Edit",
   "done_button": "Done",
@@ -31,6 +32,11 @@
 
   "home_empty_title": "No items yet",
   "home_empty_body": "Add card bills, subscriptions, or insurance dates before they slip by.",
+  "preset_quick_add_label": "Try starting with one of these",
+  "preset_card_bill": "Card payment date",
+  "preset_netflix": "Netflix subscription",
+  "preset_car_tax": "Vehicle tax (June)",
+  "preset_income_tax": "Income tax filing (May)",
   "home_no_upcoming_title": "Nothing coming up soon",
   "home_no_upcoming_body": "Nothing scheduled in the next 30 days. All items are shown below.",
 

@@ -134,17 +134,30 @@ class ItemDetailScreen extends ConsumerWidget {
 
     if (confirmed == true && context.mounted) {
       final locale = Localizations.localeOf(context).languageCode;
-      await markDoneAction(
+      NotificationCopy buildCopy(ReminderItem i) => NotificationCopy(
+            title: i.title,
+            body: du.formatNotificationBody(i.dueAt, locale),
+          );
+      final undo = await markDoneAction(
         ref: ref,
         id: item.id,
-        copyFor: (i) => NotificationCopy(
-          title: i.title,
-          body: du.formatNotificationBody(i.dueAt, locale),
-        ),
+        copyFor: buildCopy,
       );
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.toast_item_done)),
+          SnackBar(
+            content: Text(l10n.toast_item_done),
+            action: undo == null
+                ? null
+                : SnackBarAction(
+                    label: l10n.undo_button,
+                    onPressed: () => undoMarkDoneAction(
+                      ref: ref,
+                      undo: undo,
+                      copyFor: buildCopy,
+                    ),
+                  ),
+          ),
         );
         Navigator.pop(context);
       }

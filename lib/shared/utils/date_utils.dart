@@ -76,6 +76,17 @@ String formatRepeatSchedule(
   }
 }
 
+/// 매년 돌아오는 특정 월/일의 다음 발생일(오전 9시).
+/// 올해 해당 날짜가 이미 지났으면 내년으로 넘긴다. (세금 프리셋용)
+DateTime nextAnnualOccurrence(int month, int day) {
+  final now = DateTime.now();
+  var candidate = DateTime(now.year, month, day, 9, 0);
+  if (!candidate.isAfter(now)) {
+    candidate = DateTime(now.year + 1, month, day, 9, 0);
+  }
+  return candidate;
+}
+
 DateTime defaultDueAt() {
   final now = DateTime.now();
   final candidate = DateTime(now.year, now.month, now.day, 9, 0);

@@ -82,7 +82,7 @@ const CompletionEventSchema = CollectionSchema(
   getId: _completionEventGetId,
   getLinks: _completionEventGetLinks,
   attach: _completionEventAttach,
-  version: '3.1.0+1',
+  version: '3.3.2',
 );
 
 int _completionEventEstimateSize(
